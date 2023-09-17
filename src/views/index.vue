@@ -1,3 +1,3 @@
 <script setup lang="ts">
-    const { age } = defineProps<{ age: number }>()
+    niuma = 666
 </script>
