@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-niuma = 666
+    import { RouterLink, RouterView } from 'vue-router'
+    import HelloWorld from './components/HelloWorld.vue'
+    niuma = 666
 </script>
 
 <template>
