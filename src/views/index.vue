@@ -1,3 +1,3 @@
 <script setup lang="ts">
-let niuma = 666
+niuamvs = 8797
 </script>
