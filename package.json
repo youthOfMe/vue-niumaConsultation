@@ -11,11 +11,11 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "prepare": "husky install",
-    "lint-staged" : "lint-staged"
+    "lint-staged": "lint-staged"
   },
-  "lint-staged" : {
-    "*.{js,ts,vue}" : [
-        "eslint --fix"
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix"
     ]
   },
   "dependencies": {
@@ -37,6 +37,7 @@
     "lint-staged": "^14.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",
+    "scss": "^0.2.4",
     "typescript": "~5.1.6",
     "vite": "^4.4.9",
     "vue-tsc": "^1.8.11"
