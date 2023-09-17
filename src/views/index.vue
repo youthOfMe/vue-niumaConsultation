@@ -1,3 +1,3 @@
 <script setup lang="ts">
-    name = 666
+let niuma = 666
 </script>
