@@ -1,3 +1,1 @@
-<script setup lang="ts">
-niuamvs = 8797
-</script>
+<script setup lang="ts"></script>
