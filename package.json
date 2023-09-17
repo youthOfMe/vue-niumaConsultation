@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "prepare": "husky install",
-    "lint-staged" : "lint-satged"
+    "lint-staged" : "lint-staged"
   },
   "lint-staged" : {
     "*.{js,ts,vue}" : [
