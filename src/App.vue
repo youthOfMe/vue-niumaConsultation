@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { Button as VanButton } from 'vant'
-import { useUserStore } from './stores/user'
+import { useUserStore } from './stores'
+import axios from './utils/request'
 const userStore = useUserStore()
+
+const getUser = () => {
+  axios.request({
+    url: 'patient/myUser',
+    method: 'get'
+  })
+}
 </script>
 
 <template>
@@ -19,8 +27,8 @@ const userStore = useUserStore()
     "
     >登录</van-button
   >
-  <div class="main">main</div>
-  <div class="footer">footer</div>
+  <van-button type="primary" @click="userStore.delUser()">退出登录</van-button>
+  <van-button @click="getUser()">获取用户信息</van-button>
 </template>
 
 <style scoped lang="scss">
@@ -31,3 +39,4 @@ const userStore = useUserStore()
   color: var(--main-color);
 }
 </style>
+./stores/modules/user
