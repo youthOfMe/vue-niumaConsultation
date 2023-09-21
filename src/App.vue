@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Button as VanButton } from 'vant'
+import { Button as VanButton, showToast } from 'vant'
 import { useUserStore } from './stores'
 import axios from './utils/request'
+import { request } from './utils/request'
 const userStore = useUserStore()
 
 const getUser = () => {
@@ -12,17 +13,12 @@ const getUser = () => {
 }
 // 测试登录
 const login = () => {
-    axios
-        .request({
-            url: 'login/password',
-            method: 'POST',
-            data: {
-                mobile: '13211112222',
-                password: 'abc12345'
-            }
-        })
+    request('login/password', 'POST', {
+        mobile: '13211112222',
+        password: 'abc12345'
+    })
         .then((res) => {
-            console.log('登录成功', res)
+            console.log(res)
         })
         .catch((err) => {
             console.log(err)

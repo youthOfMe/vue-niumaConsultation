@@ -1,6 +1,6 @@
 import { useUserStore } from '@/stores'
 import axios from 'axios'
-import { AxiosError } from 'axios'
+import type { AxiosError, Method } from 'axios'
 import router from '@/router'
 
 import { showToast } from 'vant'
@@ -58,3 +58,17 @@ instance.interceptors.response.use(
 
 // 导出axios实例
 export default instance
+
+export const request = (
+    url: string,
+    method: Method = 'GET',
+    submitData?: object
+) => {
+    // 参数 : 地址 请求方式 提交的数据
+    // 返回 : promise
+    return instance.request({
+        url,
+        method,
+        [method.toUpperCase() === 'GET' ? 'params' : 'data']: submitData
+    })
+}
