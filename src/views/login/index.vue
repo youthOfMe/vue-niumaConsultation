@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { mobileRules, passwordRules } from '@/utils/rules'
-import { showToast } from 'vant'
+import { showSuccessToast, showToast } from 'vant'
 import { loginByPassword } from '@/service/user'
 import { useUserStore } from '@/stores/index'
 
@@ -11,14 +12,18 @@ const agree = ref(false)
 
 // 创建用户仓库
 const userStore = useUserStore()
+// 调用路由
+const router = useRouter()
+const route = useRoute()
 
 let onSubmit = async () => {
     if (!agree.value) {
         return showToast('请勾选按协议')
     }
     const res = await loginByPassword(mobile.value, password.value)
-    console.log(res)
     userStore.setUser(res.data)
+    showSuccessToast('登录成功')
+    router.replace((route.query.returnUrl as string) || '/user')
 }
 </script>
 
