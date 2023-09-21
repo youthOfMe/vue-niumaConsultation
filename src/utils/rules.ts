@@ -13,4 +13,10 @@ const passwordRules: FieldRule[] = [
     { pattern: /^\w{8,24}$/, message: '密码格式不正确' }
 ]
 
-export { mobileRules, passwordRules }
+// 定义验证码规则
+const codeRules: FieldRule[] = [
+    { required: true, message: '请输入验证码' },
+    { pattern: /^\d{6}$/, message: '验证码格式错误' }
+]
+
+export { mobileRules, passwordRules, codeRules }

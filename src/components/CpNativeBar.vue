@@ -1,7 +1,7 @@
 <template>
     <!-- 固定定位 左侧箭头 标题 右侧文字 -->
     <van-nav-bar
-        fiexd
+        fixed
         left-arrow
         :title="title"
         :right-text="rightTest"
