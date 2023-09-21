@@ -1,6 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
+    <cp-native-bar></cp-native-bar>
     <router-view></router-view>
 </template>
 
