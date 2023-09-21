@@ -2,14 +2,23 @@
 import { ref } from 'vue'
 import { mobileRules, passwordRules } from '@/utils/rules'
 import { showToast } from 'vant'
+import { loginByPassword } from '@/service/user'
+import { useUserStore } from '@/stores/index'
 
 const mobile = ref('')
 const password = ref('')
 const agree = ref(false)
-let onSubmit = () => {
+
+// 创建用户仓库
+const userStore = useUserStore()
+
+let onSubmit = async () => {
     if (!agree.value) {
         return showToast('请勾选按协议')
     }
+    const res = await loginByPassword(mobile.value, password.value)
+    console.log(res)
+    userStore.setUser(res.data)
 }
 </script>
 
