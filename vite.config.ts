@@ -7,7 +7,6 @@ import vue from '@vitejs/plugin-vue'
 // 配置 vant UI 组件库的解析器
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
-import { floatingBubbleProps } from 'vant'
 
 // https://vitejs.dev/config/
 export default defineConfig({
