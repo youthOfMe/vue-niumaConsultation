@@ -59,14 +59,21 @@ instance.interceptors.response.use(
 // 导出axios实例
 export default instance
 
-export const request = (
+// 声明返回数据类型
+type Data<T> = {
+    code: number
+    message: string
+    data: T
+}
+
+export const request = <T>(
     url: string,
     method: Method = 'GET',
     submitData?: object
 ) => {
     // 参数 : 地址 请求方式 提交的数据
     // 返回 : promise
-    return instance.request({
+    return instance.request<any, Data<T>>({
         url,
         method,
         [method.toUpperCase() === 'GET' ? 'params' : 'data']: submitData

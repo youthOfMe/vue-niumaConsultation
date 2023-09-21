@@ -3,6 +3,7 @@ import { Button as VanButton, showToast } from 'vant'
 import { useUserStore } from './stores'
 import axios from './utils/request'
 import { request } from './utils/request'
+import type { User } from './types/user'
 const userStore = useUserStore()
 
 const getUser = () => {
@@ -13,15 +14,15 @@ const getUser = () => {
 }
 // 测试登录
 const login = () => {
-    request('login/password', 'POST', {
-        mobile: '13211112222',
+    request<User>('login/password', 'POST', {
+        mobile: '132111122252',
         password: 'abc12345'
     })
         .then((res) => {
-            console.log(res)
+            showToast(res.message)
         })
         .catch((err) => {
-            console.log(err)
+            // showToast(err.message)
         })
 }
 </script>
