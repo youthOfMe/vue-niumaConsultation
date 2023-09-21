@@ -10,6 +10,7 @@ function fn() {
         rightText="注册"
         @click-right="fn"
     ></cp-native-bar>
+    <router-link to="/login">666</router-link>
     <router-view></router-view>
 </template>
 
