@@ -1,5 +1,7 @@
 import { useUserStore } from '@/stores'
 import axios from 'axios'
+import { AxiosError } from 'axios'
+import router from '@/router'
 
 import { showToast } from 'vant'
 
@@ -38,8 +40,18 @@ instance.interceptors.response.use(
         // 4.获取核心响应数据
         return res.data
     },
-    (err) => {
+    (err: AxiosError) => {
         // 5.处理401错误
+        if (err.response?.status === 401) {
+            // 清空本地用户信息
+            const userStore = useUserStore()
+            userStore.delUser()
+            // 跳转到登录页面，携带当前访问页面地址(包含参数的)
+            router.push({
+                path: '/login',
+                query: { returnUrl: router.currentRoute.value.fullPath }
+            })
+        }
         return Promise.reject(err)
     }
 )
