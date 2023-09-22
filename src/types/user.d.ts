@@ -27,6 +27,8 @@ export type UserInfo = OmitUser & {
     // 收藏数量
     collectionNumber: number
     // 积分数量
+    score: number
+    // 优惠券数量
     couponNumber: number
     orderInfo: {
         // 待付款数量
