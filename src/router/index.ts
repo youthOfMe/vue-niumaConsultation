@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/index'
+import 'nprogress/nprogress.css'
+import NProgress from 'nprogress'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,8 +40,14 @@ const router = createRouter({
     ]
 })
 
+// 配置进度条
+NProgress.configure({
+    showSpinner: false
+})
+
 // 全局的前置守卫
 router.beforeEach((to) => {
+    NProgress.start()
     // 获取token的
     const userStore = useUserStore()
     // 准备白名单
@@ -51,6 +59,7 @@ router.beforeEach((to) => {
 // 全局的后置守卫
 router.afterEach((to) => {
     document.title = `${to.meta.title || ''}-牛马问诊`
+    NProgress.done()
 })
 
 export default router

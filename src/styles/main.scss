@@ -40,3 +40,7 @@ body {
     padding: 0;
   }
   
+// 进度条样式
+#nprogress .bar {
+    background-color: var(--cp-primary) !important;
+}
