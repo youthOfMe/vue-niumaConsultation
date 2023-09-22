@@ -9,6 +9,9 @@ import 'vant/lib/index.css'
 // 引入scss配置样式
 import '@/styles/main.scss'
 
+// 引入svg地图进行使用
+import 'virtual:svg-icons-register'
+
 const app = createApp(App)
 
 //使用持久化插件

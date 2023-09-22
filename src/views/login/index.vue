@@ -52,6 +52,9 @@ const onSend = async () => {
     }, 1000)
 }
 onUnmounted(() => clearInterval(timer))
+
+// 进行配置密码的可见与不可见
+const isShow = ref<boolean>(false)
 </script>
 
 <template>
@@ -80,11 +83,19 @@ onUnmounted(() => clearInterval(timer))
             </van-field>
             <van-field
                 placeholder="请输入密码"
-                type="password"
+                :type="isShow ? 'text' : 'password'"
                 v-model="password"
                 :rules="passwordRules"
                 v-if="isPass"
             >
+                <template #button>
+                    <cp-icon
+                        :name="`login-eye-${isShow ? 'on' : 'off'}`"
+                        @click="isShow = !isShow"
+                        style="margin-right: 10px"
+                    >
+                    </cp-icon>
+                </template>
             </van-field>
             <van-field
                 placeholder="请输入验证码"
