@@ -6,7 +6,8 @@ const router = createRouter({
     routes: [
         {
             path: '/login',
-            component: () => import('@/views/login/index.vue')
+            component: () => import('@/views/login/index.vue'),
+            meta: { title: '登录' }
         },
         {
             path: '/',
@@ -14,26 +15,30 @@ const router = createRouter({
             children: [
                 {
                     path: '/home',
-                    component: () => import('@/views/Home/index.vue')
+                    component: () => import('@/views/Home/index.vue'),
+                    meta: { title: '首页' }
                 },
                 {
                     path: '/article',
-                    component: () => import('@/views/Article/index.vue')
+                    component: () => import('@/views/Article/index.vue'),
+                    meta: { title: '健康百科' }
                 },
                 {
                     path: '/notify',
-                    component: () => import('@/views/Notify/index.vue')
+                    component: () => import('@/views/Notify/index.vue'),
+                    meta: { title: '消息通知' }
                 },
                 {
                     path: '/user',
-                    component: () => import('@/views/User/index.vue')
+                    component: () => import('@/views/User/index.vue'),
+                    meta: { title: '个人中心' }
                 }
             ]
         }
     ]
 })
 
-// 全局的前置导航
+// 全局的前置守卫
 router.beforeEach((to) => {
     // 获取token的
     const userStore = useUserStore()
@@ -41,6 +46,11 @@ router.beforeEach((to) => {
     const whiteList = ['/login']
     // 如果你没有token并且不在白名单中，就重定向到登录
     if (!userStore.user?.token && !whiteList.includes(to.path)) return '/login'
+})
+
+// 全局的后置守卫
+router.afterEach((to) => {
+    document.title = `${to.meta.title || ''}-牛马问诊`
 })
 
 export default router
