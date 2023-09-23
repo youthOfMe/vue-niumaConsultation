@@ -12,14 +12,16 @@
 </template>
 
 <script setup lang="ts">
+import { backTopProps } from 'vant'
 import { useRouter } from 'vue-router'
 
 let router = useRouter()
 
 // 1.通过props来实现标题和右侧文字设置
-defineProps<{
+const props = defineProps<{
     title?: string
     rightTest?: string
+    back?: () => void
 }>()
 const emit = defineEmits<{
     (e: 'click-right'): void
@@ -30,6 +32,7 @@ const onClickRight = function () {
 }
 // 3.回退
 const onClickLeft = () => {
+    if (props.back) return props.back()
     if (history.state?.back) {
         router.back()
     } else {

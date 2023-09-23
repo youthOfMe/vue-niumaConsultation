@@ -13,7 +13,8 @@ const router = createRouter({
         },
         {
             path: '/user/patient',
-            component: () => import('@/views/User/PatientPage.vue')
+            component: () => import('@/views/User/PatientPage.vue'),
+            meta: { title: '家庭档案' }
         },
         {
             path: '/',
