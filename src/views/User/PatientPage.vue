@@ -12,6 +12,8 @@ const loadList = async () => {
 onMounted(() => {
     loadList()
 })
+
+const count = ref(10)
 </script>
 
 <template>
@@ -35,6 +37,12 @@ onMounted(() => {
                 <p>添加患者</p>
             </div>
             <div class="patient-tip">最多可添加 6 人</div>
+            <!-- 测试 -->
+            <cp-raido-btn
+                :count="count"
+                @update:count="count = $event"
+            ></cp-raido-btn>
+            <cp-raido-btn v-model:count="count"></cp-raido-btn>
         </div>
     </div>
 </template>
