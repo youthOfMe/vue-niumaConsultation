@@ -13,7 +13,13 @@ onMounted(() => {
     loadList()
 })
 
-const count = ref(10)
+// 定义单选框中的数据
+const options = [
+    { label: '男', value: 1 },
+    { label: '女', value: 2 }
+]
+// 定义数据来进行判断哪个被选中了
+const gender = ref(1)
 </script>
 
 <template>
@@ -37,12 +43,7 @@ const count = ref(10)
                 <p>添加患者</p>
             </div>
             <div class="patient-tip">最多可添加 6 人</div>
-            <!-- 测试 -->
-            <cp-raido-btn
-                :count="count"
-                @update:count="count = $event"
-            ></cp-raido-btn>
-            <cp-raido-btn v-model:count="count"></cp-raido-btn>
+            <cp-raido-btn :options="options" v-model="gender"></cp-raido-btn>
         </div>
     </div>
 </template>
