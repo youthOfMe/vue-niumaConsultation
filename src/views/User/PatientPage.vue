@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { PatientList } from '@/types/user'
+import { ref, onMounted, computed } from 'vue'
+import type { PatientList, Patient } from '@/types/user'
 import { getPatientList } from '@/service/user'
 
 // 组件挂载完毕的时候进行获取数据
@@ -24,6 +24,7 @@ const gender = ref(1)
 // 控制popup
 const show = ref(false)
 const showPopup = () => {
+    patient.value = { ...initPatient }
     show.value = true
 }
 
@@ -31,6 +32,21 @@ const showPopup = () => {
 const back = () => {
     show.value = false
 }
+
+// 进行配置添加患者双向绑定数据初始化
+const initPatient: Patient = {
+    name: '',
+    idCard: '',
+    gender: 1,
+    defaultFlag: 0
+}
+
+const patient = ref<Patient>({ ...initPatient })
+
+const defaultFlag = computed({
+    get: () => (patient.value.defaultFlag === 1 ? true : false),
+    set: (value) => (patient.value.defaultFlag = value ? 1 : 0)
+})
 </script>
 
 <template>
@@ -61,23 +77,29 @@ const back = () => {
                     <van-field
                         label="真实姓名"
                         placeholder="请输入真实姓名"
+                        v-model="patient.name"
                     ></van-field>
                     <van-field
                         label="身份证号"
                         placeholder="请输入身份证号"
+                        v-model="patient.idCard"
                     ></van-field>
                     <van-field label="性别" class="pb4">
                         <!-- 单选按钮组件 -->
                         <template #input>
                             <cp-raido-btn
-                                v-model="gender"
+                                v-model="patient.gender"
                                 :options="options"
                             ></cp-raido-btn>
                         </template>
                     </van-field>
                     <van-field label="默认就诊人">
                         <template #input>
-                            <van-checkbox :icon-size="18" round></van-checkbox>
+                            <van-checkbox
+                                :icon-size="18"
+                                round
+                                v-model="patient.defaultFlag"
+                            ></van-checkbox>
                         </template>
                     </van-field>
                 </van-form>
