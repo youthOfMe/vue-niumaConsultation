@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import type { PatientList, Patient } from '@/types/user'
-import { getPatientList } from '@/service/user'
+import { addPatient, getPatientList } from '@/service/user'
+import { nameRules, idCardRule } from '@/utils/rules'
+import { showConfirmDialog, type FormInstance, showSuccessToast } from 'vant'
 
 // 组件挂载完毕的时候进行获取数据
 const list = ref<PatientList>([])
@@ -16,7 +18,7 @@ onMounted(() => {
 // 定义单选框中的数据
 const options = [
     { label: '男', value: 1 },
-    { label: '女', value: 2 }
+    { label: '女', value: 0 }
 ]
 // 定义数据来进行判断哪个被选中了
 const gender = ref(1)
@@ -47,10 +49,32 @@ const defaultFlag = computed({
     get: () => (patient.value.defaultFlag === 1 ? true : false),
     set: (value) => (patient.value.defaultFlag = value ? 1 : 0)
 })
+
+// 进行提交
+const form = ref<FormInstance>()
+const onSubmit = async () => {
+    await form.value?.validate()
+    console.log('校验通过')
+    // 性别校验
+    const gender = Number(patient.value.idCard.substring(-2, -1)) % 2
+    if (gender !== patient.value.gender % 2) {
+        await showConfirmDialog({
+            title: '温馨提示',
+            message: '填写的性别和身份证号中的不一致\n您确认提交吗'
+        })
+    }
+    // 提交
+    await addPatient(patient.value)
+    // 成功: 关闭添加患者页面,加载患者列表,成功提示
+    show.value = false
+    location.reload()
+    showSuccessToast('添加成功')
+}
 </script>
 
 <template>
     <div class="patient-page">
+        <cp-native-bar title="家庭档案"></cp-native-bar>
         <div class="patient-list">
             <div class="patient-item" v-for="item in list" :key="item.id">
                 <div class="info">
@@ -71,18 +95,25 @@ const defaultFlag = computed({
             <div class="patient-tip">最多可添加 6 人</div>
             <!-- 使用popup 组件 -->
             <van-popup position="right" v-model:show="show">
-                <cp-native-bar title="添加患者" right-text="保存" :back="back">
+                <cp-native-bar
+                    title="添加患者"
+                    right-text="保存"
+                    :back="back"
+                    @click-right="onSubmit"
+                >
                 </cp-native-bar>
                 <van-form autocomplete="off" ref="form">
                     <van-field
                         label="真实姓名"
                         placeholder="请输入真实姓名"
                         v-model="patient.name"
+                        :rules="nameRules"
                     ></van-field>
                     <van-field
                         label="身份证号"
                         placeholder="请输入身份证号"
                         v-model="patient.idCard"
+                        :rules="idCardRule"
                     ></van-field>
                     <van-field label="性别" class="pb4">
                         <!-- 单选按钮组件 -->
