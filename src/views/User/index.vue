@@ -113,6 +113,7 @@ const onLogout = async () => {
                 :border="false"
                 v-for="(item, index) in tools"
                 :key="item.label"
+                :to="item.path"
             >
                 <template #icon
                     ><cp-icon :name="`user-tool-0${index + 1}`"
