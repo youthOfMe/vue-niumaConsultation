@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import router from '@/router'
 import { getUserInfo } from '@/service/user'
+import { useUserStore } from '@/stores'
 import type { UserInfo } from '@/types/user'
+import { showConfirmDialog } from 'vant'
 import { ref, onMounted } from 'vue'
 
 const user = ref<UserInfo>()
@@ -10,6 +13,29 @@ onMounted(async () => {
     user.value = res.data
     console.log(res.data)
 })
+
+// 初始化工具
+const tools = [
+    { label: '我的问诊', path: '/user/consult' },
+    { label: '我的处方', path: '/' },
+    { label: '家庭档案', path: '/user/patient' },
+    { label: '地址管理', path: '/' },
+    { label: '我的评价', path: '/' },
+    { label: '客服官方', path: '/' },
+    { label: '设置', path: '/' }
+]
+
+// 退出登录
+const onLogout = async () => {
+    await showConfirmDialog({
+        title: '温馨提示',
+        message: '请问您是否确认退出牛马问诊?'
+    })
+    // 点击确认后
+    const userStore = useUserStore()
+    userStore.delUser()
+    location.reload()
+}
 </script>
 
 <template>
@@ -79,6 +105,22 @@ onMounted(async () => {
                 </van-col>
             </van-row>
         </div>
+        <div class="user-page-group">
+            <h3>快捷工具</h3>
+            <van-cell
+                :title="item.label"
+                is-link
+                :border="false"
+                v-for="(item, index) in tools"
+                :key="item.label"
+            >
+                <template #icon
+                    ><cp-icon :name="`user-tool-0${index + 1}`"
+                /></template>
+            </van-cell>
+        </div>
+        <!-- 退出登录 -->
+        <a href="javascript:;" class="logout" @click="onLogout">退出登录</a>
     </div>
 </template>
 
