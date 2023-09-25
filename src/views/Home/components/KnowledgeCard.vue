@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { Knowledge } from '@/types/consult'
+import { useFollow } from '../../../composables/index'
 
 defineProps<{
     item: Knowledge
 }>()
+
+const { loading, follow } = useFollow('knowledge')
 </script>
 
 <template>
@@ -12,7 +15,7 @@ defineProps<{
             <van-image
                 round
                 class="avatar"
-                src="https://yanxuan-item.nosdn.127.net/9ad83e8d9670b10a19b30596327cfd14.png"
+                :src="item.creatorAvatar"
             ></van-image>
             <div class="info">
                 <p class="name">{{ item.creatorName }}</p>
@@ -21,9 +24,14 @@ defineProps<{
                     {{ item.creatorTitles }}
                 </p>
             </div>
-            <van-button class="btn" size="small" round>{{
-                item.likeFlag ? '已关注' : '+ 关注'
-            }}</van-button>
+            <van-button
+                class="btn"
+                size="small"
+                round
+                :loading="loading"
+                @click="follow(item)"
+                >{{ item.likeFlag ? '已关注' : '+ 关注' }}</van-button
+            >
         </div>
         <div class="body">
             <h3 class="title van-ellipsis">

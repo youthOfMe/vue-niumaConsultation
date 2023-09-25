@@ -7,8 +7,6 @@ import type {
     KnowledgeList
 } from '@/types/consult'
 import { getKonwledgePage } from '@/service/consult'
-// 加载中状态
-const loading = ref(false)
 // 是否完全加载完毕数据
 const finished = ref(false)
 // 配置数据列表
@@ -23,6 +21,8 @@ const params = ref<KnowledgeParams>({
     current: 1,
     pageSize: 5
 })
+// 加载中状态
+const loading = ref(false)
 // 滚动到底部时进行加载
 const onLoad = async () => {
     const res = await getKonwledgePage(params.value)

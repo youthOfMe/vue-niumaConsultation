@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useFollow } from '@/composables'
 import { followOrUnfollow } from '@/service/consult'
 import type { Doctor } from '@/types/consult'
 import { ref } from 'vue'
@@ -8,18 +9,7 @@ defineProps<{
     item: Doctor
 }>()
 
-// 使用关注功能
-const loading = ref(false)
-const follow = async (item: Doctor) => {
-    // 按钮进行加载状态
-    loading.value = true
-    try {
-        await followOrUnfollow(item.id, 'doc')
-        item.likeFlag = item.likeFlag === 1 ? 0 : 1
-    } finally {
-        loading.value = false
-    }
-}
+const { loading, follow } = useFollow()
 </script>
 <template>
     <div class="doctor-card">
