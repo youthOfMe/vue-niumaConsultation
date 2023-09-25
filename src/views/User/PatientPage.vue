@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import type { PatientList, Patient } from '@/types/user'
-import { addPatient, getPatientList } from '@/service/user'
+import { addPatient, getPatientList, editPatient } from '@/service/user'
 import { nameRules, idCardRule } from '@/utils/rules'
 import { showConfirmDialog, type FormInstance, showSuccessToast } from 'vant'
 
@@ -25,8 +25,15 @@ const gender = ref(1)
 
 // 控制popup
 const show = ref(false)
-const showPopup = () => {
-    patient.value = { ...initPatient }
+const showPopup = (item?: Patient) => {
+    // 进行判断是点击的是编辑患者还是添加患者
+    if (item) {
+        const { id, name, idCard, gender, defaultFlag } = item
+        patient.value = { id, name, idCard, gender, defaultFlag }
+    } else {
+        form.value?.resetValidation()
+        patient.value = { ...initPatient }
+    }
     show.value = true
 }
 
@@ -43,6 +50,7 @@ const initPatient: Patient = {
     defaultFlag: 0
 }
 
+// 定义初始化数据
 const patient = ref<Patient>({ ...initPatient })
 
 const defaultFlag = computed({
@@ -54,7 +62,6 @@ const defaultFlag = computed({
 const form = ref<FormInstance>()
 const onSubmit = async () => {
     await form.value?.validate()
-    console.log('校验通过')
     // 性别校验
     const gender = Number(patient.value.idCard.substring(-2, -1)) % 2
     if (gender !== patient.value.gender % 2) {
@@ -63,12 +70,15 @@ const onSubmit = async () => {
             message: '填写的性别和身份证号中的不一致\n您确认提交吗'
         })
     }
-    // 提交
-    await addPatient(patient.value)
+    // 提交 由于ID是后端返回的所以刚开始新建患者的时候是没有患者ID的
+
+    patient.value.id
+        ? await editPatient(patient.value)
+        : addPatient(patient.value)
     // 成功: 关闭添加患者页面,加载患者列表,成功提示
     show.value = false
-    location.reload()
-    showSuccessToast('添加成功')
+    loadList()
+    showSuccessToast(patient.value.id ? '编辑成功' : '新建成功')
 }
 </script>
 
@@ -85,10 +95,16 @@ const onSubmit = async () => {
                     <span>{{ item.genderValue }}</span>
                     <span>{{ item.age }}岁</span>
                 </div>
-                <div class="icon"><cp-icon name="user-edit" /></div>
+                <div class="icon" @click="showPopup(item)">
+                    <cp-icon name="user-edit" />
+                </div>
                 <div class="tag" v-if="item.defaultFlag">默认</div>
             </div>
-            <div class="patient-add" v-if="list.length < 6" @click="showPopup">
+            <div
+                class="patient-add"
+                v-if="list.length < 6"
+                @click="showPopup()"
+            >
                 <cp-icon name="user-add" />
                 <p>添加患者</p>
             </div>
@@ -96,7 +112,7 @@ const onSubmit = async () => {
             <!-- 使用popup 组件 -->
             <van-popup position="right" v-model:show="show">
                 <cp-native-bar
-                    title="添加患者"
+                    :title="patient.id ? '编辑患者' : '添加患者'"
                     right-text="保存"
                     :back="back"
                     @click-right="onSubmit"
