@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import type { PatientList, Patient } from '@/types/user'
-import { addPatient, getPatientList, editPatient } from '@/service/user'
+import {
+    addPatient,
+    getPatientList,
+    editPatient,
+    delPatient
+} from '@/service/user'
 import { nameRules, idCardRule } from '@/utils/rules'
 import { showConfirmDialog, type FormInstance, showSuccessToast } from 'vant'
 
@@ -80,6 +85,21 @@ const onSubmit = async () => {
     loadList()
     showSuccessToast(patient.value.id ? '编辑成功' : '新建成功')
 }
+
+// 配置删除功能
+const remove = async () => {
+    if (patient.value.id) {
+        // 确认框，删除请求，关闭，加载，提示
+        await showConfirmDialog({
+            title: '温馨提示',
+            message: `您确认删除 ${patient.value.name} 患者信息吗`
+        })
+        await delPatient(patient.value.id)
+        show.value = false
+        loadList()
+        showSuccessToast('删除成功')
+    }
+}
 </script>
 
 <template>
@@ -150,12 +170,29 @@ const onSubmit = async () => {
                         </template>
                     </van-field>
                 </van-form>
+                <!-- 删除按钮 -->
+                <van-action-bar v-if="patient.id">
+                    <van-action-bar-button
+                        text="删除"
+                        @click="remove"
+                    ></van-action-bar-button>
+                </van-action-bar>
             </van-popup>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+// 配置删除按钮样式
+.van-action-bar {
+    padding: 0 10px;
+    margin-bottom: 10px;
+    .van-button {
+        color: var(--cp-price);
+        background-color: var(--cp-bg);
+    }
+}
+
 .patient-page {
     padding: 46px 0 80px;
 }
