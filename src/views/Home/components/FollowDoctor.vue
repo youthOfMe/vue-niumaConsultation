@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import DoctorCard from './DoctorCard.vue'
+import { ref, onMounted } from 'vue'
+import type { DoctorPage, DoctorList } from '@/types/consult'
 
 // 使用use
 import { useWindowSize } from '@vueuse/core'
+import { getDoctorPage } from '@/service/consult'
 const { width } = useWindowSize()
+
+// 定义接收数据的响应式数据类型和请求函数
+const list = ref<DoctorList>([])
+const loadData = async () => {
+    const res = await getDoctorPage({ current: 1, pageSize: 5 })
+    list.value = res.data.rows
+    console.log(list.value)
+}
+onMounted(() => loadData())
 
 // 手写适配各种设备生成固定宽度
 // 组件初始化获取设备宽度，页面尺寸发生改变时获取设备宽度
@@ -36,8 +48,8 @@ const { width } = useWindowSize()
                 :show-indicators="false"
                 :loop="false"
             >
-                <van-swipe-item v-for="item in 5" :key="item">
-                    <doctor-card></doctor-card>
+                <van-swipe-item v-for="item in list" :key="item.id">
+                    <doctor-card :item="item"></doctor-card>
                 </van-swipe-item>
             </van-swipe>
         </div>
