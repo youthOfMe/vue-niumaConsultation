@@ -90,3 +90,6 @@ export type DoctorList = Doctor[]
 export type DoctorPage = PageParams & {
     rows: DoctorList
 }
+
+// 配置关注的目标的类型
+export type FollowType = 'topic' | 'knowledge' | 'doc' | 'disease'
