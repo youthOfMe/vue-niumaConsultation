@@ -6,7 +6,6 @@ import type {
     knowledgeType,
     KnowledgeList
 } from '@/types/consult'
-import { progressProps } from 'vant'
 import { getKonwledgePage } from '@/service/consult'
 // 加载中状态
 const loading = ref(false)
@@ -46,7 +45,11 @@ const onLoad = async () => {
             finished-text="没有更多了"
             @load="onLoad"
         >
-            <knowledge-card v-for="(item, index) in list" :key="index">
+            <knowledge-card
+                v-for="(item, index) in list"
+                :key="index"
+                :item="item"
+            >
             </knowledge-card>
         </van-list>
     </div>
