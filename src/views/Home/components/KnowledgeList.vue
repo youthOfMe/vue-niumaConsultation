@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import KnowledgeCard from './KnowledgeCard.vue'
+import type { knowledgeType } from '@/types/consult'
 // 加载中状态
 const loading = ref(false)
 // 是否完全加载完毕数据
@@ -20,6 +21,11 @@ const onLoad = () => {
         loading.value = false
     }, 2000)
 }
+
+// 定义props确定查询的时什么类型的数据
+defineProps<{
+    type: knowledgeType
+}>()
 </script>
 
 <template>

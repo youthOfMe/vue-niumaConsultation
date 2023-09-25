@@ -81,16 +81,16 @@ const active = ref(1)
         </div>
         <van-tabs sticky v-model:active="active">
             <van-tab title="关注">
-                <knowledge-list></knowledge-list>
+                <knowledge-list type="like"></knowledge-list>
             </van-tab>
             <van-tab title="推荐">
-                <knowledge-list></knowledge-list>
+                <knowledge-list type="recommend"></knowledge-list>
             </van-tab>
             <van-tab title="减脂">
-                <knowledge-list></knowledge-list>
+                <knowledge-list type="fatReduction"></knowledge-list>
             </van-tab>
             <van-tab title="饮食">
-                <knowledge-list></knowledge-list>
+                <knowledge-list type="food"></knowledge-list>
             </van-tab>
         </van-tabs>
     </div>
