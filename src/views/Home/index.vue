@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import KnowledgeList from './components/KnowledgeList.vue'
 import { ref } from 'vue'
 const active = ref(1)
 </script>
@@ -79,12 +80,18 @@ const active = ref(1)
             </van-swipe>
         </div>
         <van-tabs sticky v-model:active="active">
-            <van-tab title="关注">1</van-tab>
-            <van-tab title="推荐">
-                <p v-for="i in 100" :key="i">内容</p>
+            <van-tab title="关注">
+                <knowledge-list></knowledge-list>
             </van-tab>
-            <van-tab title="减脂">3</van-tab>
-            <van-tab title="饮食">4</van-tab>
+            <van-tab title="推荐">
+                <knowledge-list></knowledge-list>
+            </van-tab>
+            <van-tab title="减脂">
+                <knowledge-list></knowledge-list>
+            </van-tab>
+            <van-tab title="饮食">
+                <knowledge-list></knowledge-list>
+            </van-tab>
         </van-tabs>
     </div>
 </template>
