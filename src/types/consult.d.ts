@@ -112,7 +112,7 @@ export type Consult = {
     // 问诊类型
     type: ConsultType
     // 快速问诊类型 普通 => 0 三甲 => 1
-    illnessTime: 0 | 1
+    illnessType: 0 | 1
     // 科室ID
     depId: string
     // 科室ID
