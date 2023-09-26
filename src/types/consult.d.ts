@@ -93,3 +93,45 @@ export type DoctorPage = PageParams & {
 
 // 配置关注的目标的类型
 export type FollowType = 'topic' | 'knowledge' | 'doc' | 'disease'
+
+// 引入枚举进行设置类型
+import { ConsultType, IllnessTime } from '@/enum'
+
+// 配置图片列表类型
+export type Image = {
+    // 图片ID
+    id: string
+    // 图片地址
+    url: string
+}
+
+// 配置问诊记录数据类型
+export type Consult = {
+    // 图片ID
+    id: string
+    // 问诊类型
+    type: ConsultType
+    // 快速问诊类型 普通 => 0 三甲 => 1
+    illnessTime: 0 | 1
+    // 科室ID
+    depId: string
+    // 科室ID
+    depId: string
+    // 疾病描述
+    illnessDesc: string
+    // 疾病持续时间
+    illnessTime: IllnessTime
+    // 是否就诊过 未就诊过 => 0 就诊过 => 1
+    consultFlag: 0 | 1
+    // 图片数组
+    pictures: Image[]
+    // 患者ID
+    patientId: string
+    // 优惠券ID
+    couponId: string
+}
+
+// Partial<T> 把一个对象的属性转换成可选
+type PartialConsult = Partial<Consult>
+// Requried<T> 把一个对象的属性全部转换为必选
+type RequriedConsult = Required<PartialConsult>
