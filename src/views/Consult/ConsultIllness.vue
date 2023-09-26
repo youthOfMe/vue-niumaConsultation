@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { IllnessTime } from '@/enums'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import type { ConsultIllness } from '@/types/consult'
-import CpRaidoBtn from '@/components/CpRadioBtn.vue'
 import type {
     UploaderAfterRead,
     UploaderFileListItem
 } from 'vant/lib/uploader/types'
 import { uploadImage } from '@/service/consult'
+import { useConsultStore } from '@/stores'
+import { showToast } from 'vant'
 
 // 准备看病时间帮的那个数据
 const timeOptions = [
@@ -58,6 +60,27 @@ const onDeleteImg = (item: UploaderFileListItem) => {
         (pic) => pic.url !== item.url
     )
     console.log(form.value.pictures)
+}
+
+// 进行配置控制按钮激活/非激活状态转换数据
+const disabled = computed(
+    () =>
+        !form.value.illnessDesc ||
+        form.value.illnessTime === undefined ||
+        form.value.consultFlag === undefined
+)
+
+// 进行下一步提交和保存数据的操作
+const consultStore = useConsultStore()
+const router = useRouter()
+const next = () => {
+    if (!form.value.illnessDesc) return showToast('请输入病情描述')
+    if (!form.value.illnessTime) return showToast('请输入症状持续的时间')
+    if (!form.value.consultFlag) return showToast('请输入您是就诊过')
+    // 记录病情
+    consultStore.setIllness(form.value)
+    // 跳转，携带标识
+    router.push('/user/patient?isChange=1')
 }
 </script>
 
@@ -113,11 +136,33 @@ const onDeleteImg = (item: UploaderFileListItem) => {
                     上传内容仅医生可见,最多9张图,最大5MB
                 </p>
             </div>
+            <!-- 下一步 -->
+            <van-button
+                :class="{ disabled }"
+                type="primary"
+                round
+                block
+                @click="next"
+            >
+                下一步
+            </van-button>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+// 进行配置按钮样式
+.van-button {
+    font-size: 16px;
+    margin-bottom: 30px;
+    &.disabled {
+        opacity: 1;
+        background: #fafafa;
+        color: #d9dbde;
+        border: #fafafa;
+    }
+}
+
 // 上传图标组件基本样式
 .illness-img {
     padding-top: 16px;
