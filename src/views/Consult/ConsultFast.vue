@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useConsultStore } from '@/stores/modules/consult'
+import { useConsultStore } from '@/stores'
 
 // 进行使用仓库
 const consultStore = useConsultStore()

@@ -1,23 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import type { TopDep } from '@/types/consult'
+import { getAllDep } from '@/service/consult'
+import { useConsultStore } from '@/stores'
 
 const active = ref(0)
+
+// 进行科室数据请求
+const allDep = ref<TopDep[]>([])
+onMounted(async () => {
+    const res = await getAllDep()
+    allDep.value = res.data
+})
+// 监听获取二级科室数据
+const subDep = computed(() => allDep.value[active.value]?.child)
+// 进行本地持久化处理
+const consultStore = useConsultStore()
 </script>
 
 <template>
     <div class="consult-dep-page">
-        <cp-nav-bar title="选择科室" />
+        <cp-native-bar title="选择科室" />
         <div class="wrapper">
             <van-sidebar v-model="active">
-                <van-sidebar-item title="内科" />
-                <van-sidebar-item title="外科" />
-                <van-sidebar-item title="皮肤科" />
-                <van-sidebar-item title="骨科" />
+                <van-sidebar-item
+                    v-for="item in allDep"
+                    :title="item.name"
+                    :key="item.id"
+                />
             </van-sidebar>
             <div class="sub-dep">
-                <router-link to="/consult/illness">科室一</router-link>
-                <router-link to="/consult/illness">科室二</router-link>
-                <router-link to="/consult/illness">科室三</router-link>
+                <router-link
+                    to="/consult/illness"
+                    v-for="sub in subDep"
+                    :key="sub.id"
+                    @click="consultStore.setDep(sub.id)"
+                >
+                    {{ sub.name }}
+                </router-link>
             </div>
         </div>
     </div>
