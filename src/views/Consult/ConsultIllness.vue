@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IllnessTime } from '@/enums'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { ConsultIllness } from '@/types/consult'
 import type {
@@ -9,7 +9,8 @@ import type {
 } from 'vant/lib/uploader/types'
 import { uploadImage } from '@/service/consult'
 import { useConsultStore } from '@/stores'
-import { showToast } from 'vant'
+import { showConfirmDialog, showToast } from 'vant'
+import type { Image } from '@/types/consult'
 
 // 准备看病时间帮的那个数据
 const timeOptions = [
@@ -34,7 +35,7 @@ const form = ref<ConsultIllness>({
 })
 
 // 上传图片
-const fileList = ref([])
+const fileList = ref<Image[]>([])
 const onAfterRead: UploaderAfterRead = (item) => {
     if (Array.isArray(item)) return
     if (!item.file) return
@@ -82,6 +83,22 @@ const next = () => {
     // 跳转，携带标识
     router.push('/user/patient?isChange=1')
 }
+
+onMounted(() => {
+    if (consultStore.consult.illnessDesc) {
+        showConfirmDialog({
+            title: '富康提示',
+            message: '是否恢复原来填写的数据',
+            closeOnPopstate: false // 保证在页面回退时也能进行显示，因为这个组件在页面回退时自动关闭
+        }).then(() => {
+            // 回显数据
+            const { illnessDesc, illnessTime, consultFlag, pictures } =
+                consultStore.consult
+            form.value = { illnessDesc, illnessTime, consultFlag, pictures }
+            fileList.value = pictures || []
+        })
+    }
+})
 </script>
 
 <template>

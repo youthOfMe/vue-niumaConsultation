@@ -165,7 +165,7 @@ const remove = async () => {
                             <van-checkbox
                                 :icon-size="18"
                                 round
-                                v-model="patient.defaultFlag"
+                                v-model="defaultFlag"
                             ></van-checkbox>
                         </template>
                     </van-field>
