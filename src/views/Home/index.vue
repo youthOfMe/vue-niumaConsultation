@@ -3,6 +3,11 @@ import KnowledgeList from './components/KnowledgeList.vue'
 import FollowDoctor from './components/FollowDoctor.vue'
 import { ref } from 'vue'
 const active = ref(1)
+// 引入并创建持久化仓库
+import { useConsultStore } from '@/stores/modules/consult'
+const consultStore = useConsultStore()
+// 引入枚举进行设置类型
+import { ConsultType } from '@/enums'
 </script>
 
 <template>
@@ -10,7 +15,7 @@ const active = ref(1)
         <!-- 头部 -->
         <div class="home-header">
             <div class="con">
-                <h1>如欣问诊</h1>
+                <h1>如欣问诊 {{ consultStore.consult }}</h1>
                 <div class="search">
                     <cp-icon name="home-search" />
                     搜一搜：疾病/症状/医生/健康知识
@@ -28,7 +33,11 @@ const active = ref(1)
                     </router-link>
                 </van-col>
                 <van-col span="8">
-                    <router-link to="/consult/fast" class="nav">
+                    <router-link
+                        to="/consult/fast"
+                        class="nav"
+                        @click="consultStore.setType(ConsultType.Fast)"
+                    >
                         <cp-icon name="home-graphic"></cp-icon>
                         <p class="title">极速问诊</p>
                         <p class="desc">20s医生极速回复</p>
