@@ -5,7 +5,9 @@ import type {
     KnowledgeParams,
     PageParams,
     TopDep,
-    Image
+    Image,
+    ConsultOrderPreParms,
+    ConsultOrderPreData
 } from '@/types/consult'
 import { request } from '@/utils/request'
 export const getKonwledgePage = (params: KnowledgeParams) =>
@@ -28,3 +30,6 @@ export const uploadImage = (file: File) => {
     fd.append('file', file) // 使用append方法给对象进行添加属性
     return request<Image>('upload', 'POST', fd)
 }
+
+export const getConsultOrderPre = (params: ConsultOrderPreParms) =>
+    request<ConsultOrderPreData>('patient/consult/order/pre', 'GET', params)
