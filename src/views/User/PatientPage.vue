@@ -8,7 +8,15 @@ import {
     delPatient
 } from '@/service/user'
 import { nameRules, idCardRule } from '@/utils/rules'
-import { showConfirmDialog, type FormInstance, showSuccessToast } from 'vant'
+import {
+    showConfirmDialog,
+    type FormInstance,
+    showSuccessToast,
+    showToast
+} from 'vant'
+import { useRoute } from 'vue-router'
+import { useConsultStore } from '@/stores'
+import router from '@/router'
 
 // 组件挂载完毕的时候进行获取数据
 const list = ref<PatientList>([])
@@ -68,7 +76,8 @@ const form = ref<FormInstance>()
 const onSubmit = async () => {
     await form.value?.validate()
     // 性别校验
-    const gender = Number(patient.value.idCard.substring(-2, -1)) % 2
+    const gender = Number(patient.value.idCard.slice(-2, -1)) % 2
+    console.log(gender)
     if (gender !== patient.value.gender % 2) {
         await showConfirmDialog({
             title: '温馨提示',
@@ -100,13 +109,46 @@ const remove = async () => {
         showSuccessToast('删除成功')
     }
 }
+// 判断是不是进行选择患者
+const route = useRoute()
+// 传递的参数都是字符串类型不是数字
+const isChange = computed(() => route.query.isChange === '1')
+
+// 选中效果
+const patientId = ref<string>()
+const selectPatient = (item: Patient) => {
+    if (isChange.value) {
+        patientId.value = item.id
+    }
+}
+
+// 下一步的作用
+const consultStore = useConsultStore()
+const next = () => {
+    if (!patientId.value) return showToast('请选择患者')
+    consultStore.setPatient(patientId.value)
+    router.push('/consult/pay')
+}
 </script>
 
 <template>
     <div class="patient-page">
-        <cp-native-bar title="家庭档案"></cp-native-bar>
+        <cp-native-bar
+            :title="isChange ? '选择患者' : '家庭档案'"
+        ></cp-native-bar>
+        <!-- 头部提示 -->
+        <div class="patient-change" v-if="isChange">
+            <h3>请选择患者信息</h3>
+            <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+        </div>
         <div class="patient-list">
-            <div class="patient-item" v-for="item in list" :key="item.id">
+            <div
+                class="patient-item"
+                v-for="item in list"
+                :key="item.id"
+                :class="{ selected: patientId === item.id }"
+                @click="selectPatient(item)"
+            >
                 <div class="info">
                     <span class="name">{{ item.name }}</span>
                     <span class="id">{{
@@ -115,7 +157,7 @@ const remove = async () => {
                     <span>{{ item.genderValue }}</span>
                     <span>{{ item.age }}岁</span>
                 </div>
-                <div class="icon" @click="showPopup(item)">
+                <div class="icon" @click.stop="showPopup(item)">
                     <cp-icon name="user-edit" />
                 </div>
                 <div class="tag" v-if="item.defaultFlag">默认</div>
@@ -179,10 +221,61 @@ const remove = async () => {
                 </van-action-bar>
             </van-popup>
         </div>
+        <!-- 底部按钮 -->
+        <div class="patient-next" v-if="isChange">
+            <van-button type="primary" round block @click="next"
+                >下一步</van-button
+            >
+        </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+// 选中时的样式
+.patient-change {
+    padding: 15px;
+    > h3 {
+        font-weight: normal;
+        margin-bottom: 5px;
+    }
+    > p {
+        color: var(--cp-text3);
+    }
+}
+// 下一步的样式
+.patient-next {
+    padding: 15px;
+    background-color: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    box-sizing: border-box;
+}
+
+// 配置编辑患者样式
+.patient-change {
+    padding: 15px;
+    > h3 {
+        font-weight: normal;
+        margin-bottom: 5px;
+    }
+    > p {
+        color: var(--cp-text3);
+    }
+}
+.patient-next {
+    padding: 15px;
+    background-color: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    box-sizing: border-box;
+}
+
 // 配置删除按钮样式
 .van-action-bar {
     padding: 0 10px;
@@ -261,6 +354,7 @@ const remove = async () => {
         justify-content: center;
         align-items: center;
     }
+    // 设置选中后的样式
     &.selected {
         border-color: var(--cp-primary);
         background-color: var(--cp-plain);
