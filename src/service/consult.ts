@@ -4,7 +4,8 @@ import type {
     KnowledgePage,
     KnowledgeParams,
     PageParams,
-    TopDep
+    TopDep,
+    Image
 } from '@/types/consult'
 import { request } from '@/utils/request'
 export const getKonwledgePage = (params: KnowledgeParams) =>
@@ -19,3 +20,11 @@ export const followOrUnfollow = (id: string, type: FollowType) =>
 
 // 配置科室请求接口
 export const getAllDep = () => request<TopDep[]>('dep/all')
+
+// 配置上传文件API
+export const uploadImage = (file: File) => {
+    // 提交File对象, 需要准备一个FormData对象
+    const fd = new FormData()
+    fd.append('file', file) // 使用append方法给对象进行添加属性
+    return request<Image>('upload', 'POST', fd)
+}

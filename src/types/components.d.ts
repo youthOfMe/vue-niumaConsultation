@@ -1,6 +1,6 @@
 import CpNativeBar from '@/components/CpNativeBar.vue'
 import CpIcon from '@/components/CpIcon.vue'
-import CpRaidoBtn from '@/components/CpRaidoBtn.vue'
+import CpRadioBtn from '@/components/CpRaidoBtn.vue'
 import KnowledgeCard from '@/views/Home/components/KnowledgeCard.vue'
 import KnowledgeList from '@/views/Home/components/KnowledgeList.vue'
 
@@ -9,7 +9,7 @@ declare module 'vue' {
         // 添加组件类型
         CpNativeBar: typeof CpNativeBar
         CpIcon: typeof CpIcon
-        CpRaidoBtn: typeof CpRaidoBtn
+        CpRadioBtn: typeof CpRadioBtn
         KnowledgeCard: typeof KnowledgeCard
         KnowledgeList: typeof KnowledgeList
     }

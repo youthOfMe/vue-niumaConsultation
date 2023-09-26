@@ -146,3 +146,9 @@ type SubDep = {
 type TopDep = SubDep & {
     child: SubDep[]
 }
+
+// 定义病情描述对象数据类型
+type ConsultIllness = Pick<
+    PartialConsult,
+    'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'
+>

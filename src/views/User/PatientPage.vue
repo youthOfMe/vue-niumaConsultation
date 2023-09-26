@@ -154,10 +154,10 @@ const remove = async () => {
                     <van-field label="性别" class="pb4">
                         <!-- 单选按钮组件 -->
                         <template #input>
-                            <cp-raido-btn
+                            <cp-radio-btn
                                 v-model="patient.gender"
                                 :options="options"
-                            ></cp-raido-btn>
+                            ></cp-radio-btn>
                         </template>
                     </van-field>
                     <van-field label="默认就诊人">
