@@ -2,11 +2,11 @@
 import { useConsultStore } from '@/stores'
 import { ref, onMounted } from 'vue'
 import type { Patient } from '@/types/user'
-import type { ConsultOrderPreData } from '@/types/consult'
+import type { ConsultOrderPreData, PartialConsult } from '@/types/consult'
 import { getConsultOrderPre, createConsultOrder } from '@/service/consult'
 import { getPatientDetail } from '@/service/user'
-import { showToast } from 'vant'
-
+import { showConfirmDialog, showDialog, showToast } from 'vant'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 // 获取预支付信息
 const consultStore = useConsultStore()
 const payInfo = ref<ConsultOrderPreData>()
@@ -27,12 +27,6 @@ const loadPatient = async () => {
     const res = await getPatientDetail(consultStore.consult.patientId)
     patient.value = res.data
 }
-
-// 获取数据
-onMounted(() => {
-    loadData()
-    loadPatient()
-})
 
 // 配置渲染数据必须的数据
 const agree = ref(false)
@@ -57,6 +51,64 @@ const submit = async () => {
     orderId.value = res.data.id
     show.value = true
 }
+
+// 实现禁止用户进行路由回退功能
+onBeforeRouteLeave(() => {
+    // 返回false就是进行禁止离开本路由
+    if (orderId.value) return false
+})
+
+// 配置橱窗用户引导函数
+const router = useRouter()
+const onClose = () => {
+    return showConfirmDialog({
+        title: '牛马提示',
+        message:
+            '取消支付将无法得到医生的回复，医生接诊名额有限，是否确认取消呢',
+        cancelButtonText: '狠心离开',
+        confirmButtonText: '狠心支付'
+    })
+        .then(() => {
+            return false
+        })
+        .catch(() => {
+            orderId.value = ''
+            router.push('/home')
+            return true
+        })
+}
+
+// 实现用户填写信息的校验
+type Key = keyof PartialConsult
+// 获取数据
+onMounted(() => {
+    // 生成订单需要信息不完整的时候需要进行提示
+    // 使用生成的该联合类型，写字段时能获得类型提示
+    const validKeys: Key[] = [
+        'type',
+        'illnessType',
+        'depId',
+        'illnessDesc',
+        'illnessTime',
+        'consultFlag',
+        'patientId'
+    ]
+    const valid = validKeys.every(
+        (key) => consultStore.consult[key] !== undefined
+    )
+    if (!valid) {
+        return showDialog({
+            title: '牛马提示',
+            message:
+                '问诊信息不完整请重新添加，如果有未支付的问诊订单可以在问诊记录中进行查看',
+            closeOnPopstate: false
+        }).then(() => {
+            router.push('/home')
+        })
+    }
+    loadData()
+    loadPatient()
+})
 </script>
 
 <template>
@@ -107,7 +159,13 @@ const submit = async () => {
             :loading="loading"
         />
         <!-- 支付抽屉，控制面板 -->
-        <van-action-sheet v-model:show="show" title="选择支付方式">
+        <van-action-sheet
+            v-model:show="show"
+            title="选择支付方式"
+            :close-on-popstate="false"
+            :closeable="false"
+            :before-close="onClose"
+        >
             <div class="pay-type">
                 <p class="amount">￥{{ payInfo.actualPayment.toFixed(2) }}</p>
                 <van-cell-group>
