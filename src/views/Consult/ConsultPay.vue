@@ -3,9 +3,18 @@ import { useConsultStore } from '@/stores'
 import { ref, onMounted } from 'vue'
 import type { Patient } from '@/types/user'
 import type { ConsultOrderPreData, PartialConsult } from '@/types/consult'
-import { getConsultOrderPre, createConsultOrder } from '@/service/consult'
+import {
+    getConsultOrderPre,
+    createConsultOrder,
+    getConsultOrderPayUrl
+} from '@/service/consult'
 import { getPatientDetail } from '@/service/user'
-import { showConfirmDialog, showDialog, showToast } from 'vant'
+import {
+    showConfirmDialog,
+    showDialog,
+    showLoadingToast,
+    showToast
+} from 'vant'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 // 获取预支付信息
 const consultStore = useConsultStore()
@@ -109,6 +118,18 @@ onMounted(() => {
     loadData()
     loadPatient()
 })
+
+// 支付逻辑
+const pay = async () => {
+    if (paymentMethod.value === undefined) return showToast('请选择支付方式')
+    showLoadingToast({ message: '跳转支付', duration: 0 })
+    const res = await getConsultOrderPayUrl({
+        orderId: orderId.value,
+        paymentMethod: paymentMethod.value,
+        payCallback: 'http://localhost:5173/room'
+    })
+    window.location.href = res.data.payUrl
+}
 </script>
 
 <template>
@@ -187,7 +208,9 @@ onMounted(() => {
                     </van-cell>
                 </van-cell-group>
                 <div class="btn">
-                    <van-button type="primary" round block>立即支付</van-button>
+                    <van-button type="primary" round block @click="pay()"
+                        >立即支付</van-button
+                    >
                 </div>
             </div>
         </van-action-sheet>

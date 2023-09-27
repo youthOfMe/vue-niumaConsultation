@@ -37,6 +37,15 @@ const router = createRouter({
             meta: { title: '问诊支付' }
         },
         {
+            path: '/room',
+            component: () => import('@/views/Room/index.vue'),
+            meta: { title: '问诊室' },
+            // beforeEnter 钩子函数在这里进行使用 控制单个路由进入前进行执行函数
+            beforeEnter(to) {
+                if (to.query.payResult === 'false') return '/user/consult'
+            }
+        },
+        {
             path: '/',
             component: () => import('@/views/Layout/index.vue'),
             children: [
