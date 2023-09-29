@@ -5,10 +5,11 @@ import router from '@/router'
 
 import { showToast } from 'vant'
 
+export const baseURL = 'http://consult-api.itheima.net/'
 // 创建axios实例
 const instance = axios.create({
     // 1.设置基础地址和超时时间
-    baseURL: 'http://consult-api.itheima.net/',
+    baseURL,
     timeout: 10000
 })
 

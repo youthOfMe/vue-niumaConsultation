@@ -3,24 +3,37 @@ import CpNativeBar from '@/components/CpNativeBar.vue'
 import RoomStatus from './Components/RoomStatus.vue'
 import RoomActions from './Components/RoomActions.vue'
 import RoomMessage from './Components/RoomMessage.vue'
-import io from 'socket.io-client'
-// 建立连接
-const socket = io('http://localhost:3000')
+import io, { Socket } from 'socket.io-client'
+import { baseURL } from '@/utils/request'
+import { useUserStore } from '@/stores'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { onUnmounted } from 'vue'
 
-// on就是进行绑定事件
-socket.on('connect', () => {
-    console.log('连接成功')
-    // 发送消息
-    socket.emit('chat message', '你好 socket.io')
-})
-
-socket.on('chat message', (msg) => {
-    console.log(msg)
-    socket.close()
-})
-
-socket.on('disconnect', () => {
-    console.log('连接关闭')
+const userStore = useUserStore()
+const route = useRoute()
+let socket: Socket
+onMounted(() => {
+    socket = io(baseURL, {
+        auth: {
+            token: `Bearer ${userStore.user?.token}`
+        },
+        query: {
+            orderId: route.query.orderId
+        }
+    })
+    socket.on('connect', () => {
+        console.log('连接成功')
+    })
+    socket.on('disconnect', () => {
+        console.log('连接失败')
+    })
+    socket.on('error', () => {
+        console.log('发生错误')
+    })
+    onUnmounted(() => {
+        socket.close()
+    })
 })
 </script>
 
