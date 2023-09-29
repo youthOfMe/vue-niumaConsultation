@@ -12,3 +12,16 @@ export enum IllnessTime {
     HalfYear = 3,
     More = 4
 }
+
+// 定义消息类型
+export enum MsgType {
+    // 文字消息
+    MsgType = 1,
+    // 图片消息
+    MsgImage = 4,
+    // 患者信息
+    CardPat = 21,
+    // 处方信息
+    CardPre = 22
+    // 未评价信息
+}

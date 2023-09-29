@@ -32,9 +32,9 @@ onMounted(() => {
         console.log('发生错误')
     })
     // 获取该聊天室信息
-    socket.on('chatMsgList', (res) => {
-        console.log(res)
-    })
+    // socket.on('chatMsgList', ({ data }: { data: TimeMessages[] }) => {
+    //     console.log(res)
+    // })
     onUnmounted(() => {
         socket.close()
     })
