@@ -3,6 +3,25 @@ import CpNativeBar from '@/components/CpNativeBar.vue'
 import RoomStatus from './Components/RoomStatus.vue'
 import RoomActions from './Components/RoomActions.vue'
 import RoomMessage from './Components/RoomMessage.vue'
+import io from 'socket.io-client'
+// 建立连接
+const socket = io('http://localhost:3000')
+
+// on就是进行绑定事件
+socket.on('connect', () => {
+    console.log('连接成功')
+    // 发送消息
+    socket.emit('chat message', '你好 socket.io')
+})
+
+socket.on('chat message', (msg) => {
+    console.log(msg)
+    socket.close()
+})
+
+socket.on('disconnect', () => {
+    console.log('连接关闭')
+})
 </script>
 
 <template>
