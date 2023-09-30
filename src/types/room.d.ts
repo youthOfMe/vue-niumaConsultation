@@ -1,4 +1,4 @@
-import { Image, type Consult } from './consult'
+import type { Image, Consult } from './consult'
 import type { Patient } from './user'
 import { MsgType, PrescriptionStatus } from '@/enums'
 
@@ -86,7 +86,7 @@ export type Message = {
         picture?: Image
         // 问诊记录，患者信息
         consultRecord?: Consult & {
-            patietnInfo: Patient
+            patientInfo: Patient
         }
         // 处方信息
         prescription?: prescription

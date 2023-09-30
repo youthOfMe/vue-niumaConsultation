@@ -49,6 +49,7 @@ onMounted(() => {
             arr.push(...item.items)
         })
         list.value.unshift(...arr)
+        console.log(list.value)
     })
     onUnmounted(() => {
         socket.close()
@@ -60,8 +61,9 @@ onMounted(() => {
     <div class="room-page">
         <cp-native-bar title="牛马问诊室"></cp-native-bar>
         <room-status></room-status>
+        <room-message v-for="item in list" :key="item.id" :item="item">
+        </room-message>
         <room-actions></room-actions>
-        <room-message></room-message>
     </div>
 </template>
 
