@@ -11,6 +11,14 @@ import { onMounted } from 'vue'
 import { onUnmounted, ref } from 'vue'
 import type { TimeMessages, Message } from '@/types/room'
 import { MsgType } from '@/enums'
+import type { ConsultOrderItem } from '@/types/consult'
+import { getConsultOrderDetail } from '@/service/consult'
+
+const consult = ref<ConsultOrderItem>()
+const loadConsult = async () => {
+    const res = await getConsultOrderDetail(route.query.orderId as string)
+    consult.value = res.data
+}
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -51,9 +59,11 @@ onMounted(() => {
         list.value.unshift(...arr)
         console.log(list.value)
     })
-    onUnmounted(() => {
-        socket.close()
-    })
+    // 监听订单状态的变化
+    socket.on('statusChange', () => loadConsult())
+})
+onUnmounted(() => {
+    socket.close()
 })
 </script>
 
