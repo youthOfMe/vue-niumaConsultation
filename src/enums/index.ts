@@ -25,3 +25,13 @@ export enum MsgType {
     CardPre = 22
     // 未评价信息
 }
+
+// 定义处方状态类型
+export enum PrescriptionStatus {
+    // 未付款
+    NotPayment = 1,
+    // 已付款
+    Payment = 2,
+    // 已失效
+    Invalid = 3
+}

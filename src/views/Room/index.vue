@@ -9,6 +9,7 @@ import { useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { onUnmounted } from 'vue'
+lq = 6
 
 const userStore = useUserStore()
 const route = useRoute()
