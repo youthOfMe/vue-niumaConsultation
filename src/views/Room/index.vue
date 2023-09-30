@@ -8,12 +8,14 @@ import { baseURL } from '@/utils/request'
 import { useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
-import { onUnmounted } from 'vue'
-lq = 6
+import { onUnmounted, ref } from 'vue'
+import type { TimeMessages, Message } from '@/types/room'
+import { MsgType } from '@/enums'
 
 const userStore = useUserStore()
 const route = useRoute()
 let socket: Socket
+const list = ref<Message[]>([])
 onMounted(() => {
     socket = io(baseURL, {
         auth: {
@@ -32,10 +34,22 @@ onMounted(() => {
     socket.on('error', () => {
         console.log('发生错误')
     })
-    // 获取该聊天室信息
-    // socket.on('chatMsgList', ({ data }: { data: TimeMessages[] }) => {
-    //     console.log(res)
-    // })
+    // 获取该聊天室聊天记录，每获取聊天记录的时候就把数据加在数组前面
+    socket.on('chatMsgList', ({ data }: { data: TimeMessages[] }) => {
+        const arr: Message[] = []
+        data.forEach((item) => {
+            arr.push({
+                msgType: MsgType.Notify,
+                msg: {
+                    content: item.createTime
+                },
+                createTime: item.createTime,
+                id: item.createTime
+            })
+            arr.push(...item.items)
+        })
+        list.value.unshift(...arr)
+    })
     onUnmounted(() => {
         socket.close()
     })

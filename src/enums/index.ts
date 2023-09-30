@@ -22,8 +22,17 @@ export enum MsgType {
     // 患者信息
     CardPat = 21,
     // 处方信息
-    CardPre = 22
+    CardPre = 22,
     // 未评价信息
+    CardEvaForm = 23,
+    // 已评价消息
+    CardEva = 24,
+    // 通用通知
+    Notify = 31,
+    // 温馨提示
+    NotifyTip = 32,
+    // 取消提示
+    NotifyCancel = 33
 }
 
 // 定义处方状态类型
