@@ -14,17 +14,22 @@ import { MsgType } from '@/enums'
 import type { ConsultOrderItem } from '@/types/consult'
 import { getConsultOrderDetail } from '@/service/consult'
 
+// 获取订单状态
 const consult = ref<ConsultOrderItem>()
 const loadConsult = async () => {
     const res = await getConsultOrderDetail(route.query.orderId as string)
     consult.value = res.data
 }
 
+// 准备用户数据和消息列表
 const userStore = useUserStore()
 const route = useRoute()
 let socket: Socket
 const list = ref<Message[]>([])
 onMounted(() => {
+    // 进行获取订单状态
+    loadConsult()
+    // 与websocket服务器进行建立连接
     socket = io(baseURL, {
         auth: {
             token: `Bearer ${userStore.user?.token}`
@@ -62,6 +67,7 @@ onMounted(() => {
     // 监听订单状态的变化
     socket.on('statusChange', () => loadConsult())
 })
+// 脱离连接
 onUnmounted(() => {
     socket.close()
 })
@@ -70,10 +76,11 @@ onUnmounted(() => {
 <template>
     <div class="room-page">
         <cp-native-bar title="牛马问诊室"></cp-native-bar>
-        <room-status></room-status>
+        <room-status :status="consult?.status" :countdown="consult?.countdown">
+        </room-status>
         <room-message v-for="item in list" :key="item.id" :item="item">
         </room-message>
-        <room-actions></room-actions>
+        <room-actions :disabled="consult?.status === 2"></room-actions>
     </div>
 </template>
 
