@@ -14,7 +14,7 @@ import { MsgType } from '@/enums'
 import type { ConsultOrderItem } from '@/types/consult'
 import { getConsultOrderDetail } from '@/service/consult'
 
-// 获取订单状态
+// 获取订单详细
 const consult = ref<ConsultOrderItem>()
 const loadConsult = async () => {
     const res = await getConsultOrderDetail(route.query.orderId as string)
@@ -26,6 +26,20 @@ const userStore = useUserStore()
 const route = useRoute()
 let socket: Socket
 const list = ref<Message[]>([])
+
+// 配置父组件中发送文字信息
+const onSendText = (text: string) => {
+    // 进行提交文字
+    socket.emit('sendChatMsg', {
+        from: userStore.user?.id,
+        to: consult.value?.docInfo?.id,
+        msgType: MsgType.MsgText,
+        msg: {
+            content: text
+        }
+    })
+}
+
 onMounted(() => {
     // 进行获取订单状态
     loadConsult()
@@ -80,7 +94,8 @@ onUnmounted(() => {
         </room-status>
         <room-message v-for="item in list" :key="item.id" :item="item">
         </room-message>
-        <room-actions :disabled="consult?.status === 2"></room-actions>
+        <room-actions :disabled="consult?.status === 2" @send-text="onSendText">
+        </room-actions>
     </div>
 </template>
 
