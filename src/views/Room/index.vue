@@ -13,6 +13,7 @@ import type { TimeMessages, Message } from '@/types/room'
 import { MsgType } from '@/enums'
 import type { ConsultOrderItem } from '@/types/consult'
 import { getConsultOrderDetail } from '@/service/consult'
+import { nextTick } from 'vue'
 
 // 获取订单详细
 const consult = ref<ConsultOrderItem>()
@@ -80,6 +81,14 @@ onMounted(() => {
     })
     // 监听订单状态的变化
     socket.on('statusChange', () => loadConsult())
+    // 进行配置接收聊条消息
+    socket.on('receiveChatMsg', async (event) => {
+        list.value.push(event)
+        // 等nextTick返回promise 进行页面渲染完后子在进行dom操作否则就会出错，无法定位到底部
+        // 等到nextTick的结果后再进行滚动到底部
+        await nextTick()
+        window.scroll(0, document.body.scrollHeight)
+    })
 })
 // 脱离连接
 onUnmounted(() => {

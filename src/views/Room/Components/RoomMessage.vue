@@ -4,6 +4,8 @@ import type { Image } from '@/types/consult'
 import { timeOptions, flagOptions } from '@/service/constants'
 import { IllnessTime, MsgType } from '@/enums'
 import { showImagePreview, showToast } from 'vant'
+import dayjs from 'dayjs'
+import { useUserStore } from '@/stores'
 
 const props = defineProps<{
     item: Message
@@ -22,6 +24,10 @@ const onPreviewImage = (images?: Image[]) => {
         showImagePreview(images.map((item) => item.url))
     else showToast('暂无图片')
 }
+
+// 准备转换时间的函数
+const formatTime = (time: string) => dayjs(time).format('HH:mm')
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -72,15 +78,18 @@ const onPreviewImage = (images?: Image[]) => {
         </div>
     </div> -->
     <!-- 发送文字 -->
-    <!-- <div class="msg msg-to">
+    <div
+        class="msg msg-to"
+        v-if="
+            item.msgType === MsgType.MsgText && item.from === userStore.user?.id
+        "
+    >
         <div class="content">
-            <div class="time">20:12</div>
-            <div class="pao">大夫你好？</div>
+            <div class="time">{{ formatTime(item.createTime) }}</div>
+            <div class="pao">{{ item.msg.content }}</div>
         </div>
-        <van-image
-            src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-        />
-    </div> -->
+        <van-image :src="item.fromAvatar" />
+    </div>
     <!-- 发送图片 -->
     <!-- <div class="msg msg-to">
         <div class="content">
@@ -95,15 +104,19 @@ const onPreviewImage = (images?: Image[]) => {
         />
     </div> -->
     <!-- 接收文字 -->
-    <!-- <div class="msg msg-from">
-        <van-image
-            src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-        />
+    <div
+        class="msg msg-from"
+        v-if="
+            item.msgType === MsgType.MsgText &&
+            !(item.from === userStore.user?.id)
+        "
+    >
+        <van-image :src="item.fromAvatar" />
         <div class="content">
-            <div class="time">20:12</div>
-            <div class="pao">哪里不舒服</div>
+            <div class="time">{{ formatTime(item.createTime) }}</div>
+            <div class="pao">{{ item.msg.content }}</div>
         </div>
-    </div> -->
+    </div>
     <!-- 接收图片 -->
     <!-- <div class="msg msg-from">
         <van-image
