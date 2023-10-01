@@ -14,6 +14,8 @@ import { MsgType } from '@/enums'
 import type { ConsultOrderItem, Image } from '@/types/consult'
 import { getConsultOrderDetail } from '@/service/consult'
 import { nextTick } from 'vue'
+import dayjs from 'dayjs'
+import { showToast } from 'vant'
 
 // 获取订单详细
 const consult = ref<ConsultOrderItem>()
@@ -52,6 +54,16 @@ const onSendImage = (image: Image) => {
     })
 }
 
+// 配置问诊室聊天记录功能
+const initialMsg = ref(true)
+
+// 配下拉刷新功能
+const loading = ref(false)
+const time = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+const onRefresh = () => {
+    socket.emit('getChatMsgList', 20, time.value, consult.value?.id)
+}
+
 onMounted(() => {
     // 进行获取订单状态
     loadConsult()
@@ -76,7 +88,9 @@ onMounted(() => {
     // 获取该聊天室聊天记录，每获取聊天记录的时候就把数据加在数组前面
     socket.on('chatMsgList', ({ data }: { data: TimeMessages[] }) => {
         const arr: Message[] = []
-        data.forEach((item) => {
+        data.forEach((item, i) => {
+            // 记录每一段消息中最早的消息时间，获取聊天记录使用
+            if (i === 0) return (time.value = item.createTime)
             arr.push({
                 msgType: MsgType.Notify,
                 msg: {
@@ -88,7 +102,18 @@ onMounted(() => {
             arr.push(...item.items)
         })
         list.value.unshift(...arr)
-        console.log(list.value)
+        // 加载聊天记录后执行的功能
+        loading.value = false
+        if (!arr.length) return showToast('暂无更多聊天记录')
+
+        // 获取聊天记录的时候判断是否是第一次进行加载数据
+        if (initialMsg.value) {
+            // 第一次加载消息的时候需要滚动到最新消息
+            nextTick(() => {
+                window.scroll(0, document.body.scrollHeight)
+                initialMsg.value = false
+            })
+        }
     })
     // 监听订单状态的变化
     socket.on('statusChange', () => loadConsult())
@@ -112,8 +137,10 @@ onUnmounted(() => {
         <cp-native-bar title="牛马问诊室"></cp-native-bar>
         <room-status :status="consult?.status" :countdown="consult?.countdown">
         </room-status>
-        <room-message v-for="item in list" :key="item.id" :item="item">
-        </room-message>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh">
+            <room-message v-for="item in list" :key="item.id" :item="item">
+            </room-message>
+        </van-pull-refresh>
         <room-actions
             :disabled="consult?.status === 2"
             @send-text="onSendText"
