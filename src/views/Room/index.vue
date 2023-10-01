@@ -108,6 +108,8 @@ onMounted(() => {
 
         // 获取聊天记录的时候判断是否是第一次进行加载数据
         if (initialMsg.value) {
+            // 进行配置第一次接收信息的时候提交已读信息
+            socket.emit('updateMsgStatus', arr[arr.length - 1].id)
             // 第一次加载消息的时候需要滚动到最新消息
             nextTick(() => {
                 window.scroll(0, document.body.scrollHeight)
@@ -119,6 +121,7 @@ onMounted(() => {
     socket.on('statusChange', () => loadConsult())
     // 进行配置接收聊条消息
     socket.on('receiveChatMsg', async (event) => {
+        socket.emit('updateMsgStatus', event.id)
         list.value.push(event)
         // 等nextTick返回promise 进行页面渲染完后子在进行dom操作否则就会出错，无法定位到底部
         // 等到nextTick的结果后再进行滚动到底部

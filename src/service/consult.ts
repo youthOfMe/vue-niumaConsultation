@@ -53,3 +53,7 @@ export const getConsultOrderDetail = (orderId: string) =>
     request<ConsultOrderItem>('patient/consult/order/detail', 'GET', {
         orderId
     })
+
+// 定义维度消息的数量API
+export const getUnreadMessageCount = () =>
+    request<number>('patient/message/unRead/all')
