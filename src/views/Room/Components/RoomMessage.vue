@@ -28,6 +28,11 @@ const onPreviewImage = (images?: Image[]) => {
 // 准备转换时间的函数
 const formatTime = (time: string) => dayjs(time).format('HH:mm')
 const userStore = useUserStore()
+
+// 预览聊天图片
+const showImage = (item: Message) => {
+    showImagePreview([item?.msg?.pictures?.url as string])
+}
 </script>
 
 <template>
@@ -91,18 +96,20 @@ const userStore = useUserStore()
         <van-image :src="item.fromAvatar" />
     </div>
     <!-- 发送图片 -->
-    <!-- <div class="msg msg-to">
+    <div
+        class="msg msg-to"
+        v-if="
+            item.msgType === MsgType.MsgImage &&
+            item.from === userStore.user?.id
+        "
+        @click="showImage(item)"
+    >
         <div class="content">
-            <div class="time">20:12</div>
-            <van-image
-                fit="contain"
-                src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-            />
+            <div class="time">{{ formatTime(item.createTime) }}</div>
+            <van-image fit="contain" :src="item.msg.pictures?.url" />
         </div>
-        <van-image
-            src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-        />
-    </div> -->
+        <van-image :src="item.fromAvatar" />
+    </div>
     <!-- 接收文字 -->
     <div
         class="msg msg-from"
@@ -118,18 +125,20 @@ const userStore = useUserStore()
         </div>
     </div>
     <!-- 接收图片 -->
-    <!-- <div class="msg msg-from">
-        <van-image
-            src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-        />
+    <div
+        class="msg msg-from"
+        v-if="
+            item.msgType === MsgType.MsgImage &&
+            !(item.from === userStore.user?.id)
+        "
+        @click="showImage(item)"
+    >
+        <van-image :src="item.msg.pictures?.url" />
         <div class="content">
-            <div class="time">20:12</div>
-            <van-image
-                fit="contain"
-                src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-            />
+            <div class="time">{{ formatTime(item.createTime) }}</div>
+            <van-image fit="contain" :src="item.fromAvatar" />
         </div>
-    </div> -->
+    </div>
     <!-- 处方卡片 -->
     <!-- <div class="msg msg-recipe">
         <div class="content">

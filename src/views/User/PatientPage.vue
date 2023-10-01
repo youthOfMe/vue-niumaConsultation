@@ -23,6 +23,12 @@ const list = ref<PatientList>([])
 const loadList = async () => {
     const res = await getPatientList()
     list.value = res.data
+    // 默认选中效果
+    if (isChange.value && list.value.length) {
+        const defPatient = list.value.find((item) => item.defaultFlag === 1)
+        if (defPatient) patientId.value = defPatient.id
+        else patientId.value = list.value[0].id
+    }
 }
 onMounted(() => {
     loadList()

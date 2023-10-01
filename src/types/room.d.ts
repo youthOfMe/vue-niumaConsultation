@@ -83,7 +83,7 @@ export type Message = {
         // 文本内容
         content?: string
         // 图片对象
-        picture?: Image
+        pictures?: Image
         // 问诊记录，患者信息
         consultRecord?: Consult & {
             patientInfo: Patient

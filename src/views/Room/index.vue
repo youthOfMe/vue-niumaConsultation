@@ -11,7 +11,7 @@ import { onMounted } from 'vue'
 import { onUnmounted, ref } from 'vue'
 import type { TimeMessages, Message } from '@/types/room'
 import { MsgType } from '@/enums'
-import type { ConsultOrderItem } from '@/types/consult'
+import type { ConsultOrderItem, Image } from '@/types/consult'
 import { getConsultOrderDetail } from '@/service/consult'
 import { nextTick } from 'vue'
 
@@ -37,6 +37,17 @@ const onSendText = (text: string) => {
         msgType: MsgType.MsgText,
         msg: {
             content: text
+        }
+    })
+}
+// 配置上传图片功能
+const onSendImage = (image: Image) => {
+    socket.emit('sendChatMsg', {
+        from: userStore.user?.id,
+        to: consult.value?.docInfo?.id,
+        msgType: MsgType.MsgImage,
+        msg: {
+            pictures: image
         }
     })
 }
@@ -103,7 +114,11 @@ onUnmounted(() => {
         </room-status>
         <room-message v-for="item in list" :key="item.id" :item="item">
         </room-message>
-        <room-actions :disabled="consult?.status === 2" @send-text="onSendText">
+        <room-actions
+            :disabled="consult?.status === 2"
+            @send-text="onSendText"
+            @send-image="onSendImage"
+        >
         </room-actions>
     </div>
 </template>
