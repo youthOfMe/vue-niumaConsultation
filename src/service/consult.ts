@@ -57,3 +57,7 @@ export const getConsultOrderDetail = (orderId: string) =>
 // 定义维度消息的数量API
 export const getUnreadMessageCount = () =>
     request<number>('patient/message/unRead/all')
+
+// 定义获取处方图片地址
+export const getPrescriptionPic = (id: string) =>
+    request<{ url: string }>(`patient/consult/prescription/${id}`)
