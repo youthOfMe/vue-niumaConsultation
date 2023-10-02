@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { ConsultOrderItem } from '@/types/consult'
+import { evaluateConsultOrder } from '@/service/consult'
 import type { EvaluateDoc } from '@/types/room'
 import { showToast } from 'vant'
-import { ref, computed } from 'vue'
+import { ref, computed, inject, type Ref } from 'vue'
 
 defineProps<{
     evaluateDoc?: EvaluateDoc
@@ -13,10 +15,24 @@ const content = ref('')
 // 确认是否进行匿名评价
 const anonymousFlag = ref(false)
 const disabled = computed(() => !score.value || !content.value)
+// 进行接收订单数据
+// 进行provide和inject的时候 如果不进行设置数据类型就会导致数据类型是unknown
+const consult = inject<Ref<ConsultOrderItem>>('consult')
+const completeEva = inject<(score: number) => void>('completeEva')
 // 提交评价信息
-const onSubmit = () => {
+const onSubmit = async () => {
     if (!score.value) return showToast('请选择评分')
     if (!content.value) return showToast('请填写评价')
+    if (!consult?.value) return showToast('未找到该订单')
+    // 提交评价信息
+    await evaluateConsultOrder({
+        docId: consult?.value.docInfo?.id,
+        orderId: consult?.value.id,
+        score: score.value,
+        content: content.value,
+        anonymousFlag: anonymousFlag.value ? 1 : 0
+    })
+    completeEva && completeEva(score.value)
 }
 </script>
 

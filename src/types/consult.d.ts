@@ -117,8 +117,6 @@ export type Consult = {
     illnessType: 0 | 1
     // 科室ID
     depId: string
-    // 科室ID
-    depId: string
     // 疾病描述
     illnessDesc: string
     // 疾病持续时间
@@ -177,7 +175,7 @@ export type ConsultOrderItem = Consult & {
     // 创建时间
     createTime: string
     // 医生信息
-    docInfo?: Doctor
+    docInfo: Doctor
     // 患者信息
     patientInfo: Patient
     // 订单编号

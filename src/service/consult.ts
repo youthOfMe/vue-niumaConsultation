@@ -61,3 +61,12 @@ export const getUnreadMessageCount = () =>
 // 定义获取处方图片地址
 export const getPrescriptionPic = (id: string) =>
     request<{ url: string }>(`patient/consult/prescription/${id}`)
+
+// 定义提交信息API
+export const evaluateConsultOrder = (data: {
+    docId: string
+    orderId: string
+    score: number
+    content: string
+    anonymousFlag: 0 | 1
+}) => request('patient/order/evaluate', 'POST', data)

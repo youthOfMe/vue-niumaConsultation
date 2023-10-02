@@ -16,6 +16,7 @@ import { getConsultOrderDetail } from '@/service/consult'
 import { nextTick } from 'vue'
 import dayjs from 'dayjs'
 import { showToast } from 'vant'
+import { provide } from 'vue'
 
 // 获取订单详细
 const consult = ref<ConsultOrderItem>()
@@ -63,6 +64,19 @@ const time = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 const onRefresh = () => {
     socket.emit('getChatMsgList', 20, time.value, consult.value?.id)
 }
+
+// 提供问诊订单数据给后代组件
+provide('consult', consult)
+
+// 修改问诊订单的数据信息
+const completeEva = (score: number) => {
+    const item = list.value.find((item) => item.msgType === MsgType.CardEvaForm)
+    if (item) {
+        item.msg.evaluateDoc = { score }
+        item.msgType = MsgType.CardEva
+    }
+}
+provide('completeEva', completeEva)
 
 onMounted(() => {
     // 进行获取订单状态
