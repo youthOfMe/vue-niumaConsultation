@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import ConsultList from './components/ConsultList.vue'
 import { ConsultType } from '@/enums'
-
-defineProps<{
-    type: ConsultType
-}>()
 </script>
 
 <template>
     <div class="consult-page">
         <cp-native-bar title="问诊记录" />
         <van-tabs sticky>
-            <van-tab title="极速问诊"><consult-list /></van-tab>
-            <van-tab title="找医生"><consult-list /></van-tab>
-            <van-tab title="开药问诊"><consult-list /></van-tab>
+            <van-tab title="极速问诊"
+                ><consult-list :type="ConsultType.Fast"
+            /></van-tab>
+            <van-tab title="找医生"
+                ><consult-list :type="ConsultType.Doctor"
+            /></van-tab>
+            <van-tab title="开药问诊"
+                ><consult-list :type="ConsultType.Medication"
+            /></van-tab>
         </van-tabs>
     </div>
 </template>

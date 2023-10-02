@@ -9,7 +9,9 @@ import type {
     ConsultOrderPreParms,
     ConsultOrderPreData,
     PartialConsult,
-    ConsultOrderItem
+    ConsultOrderItem,
+    ConsultOrderListParams,
+    ConsultOrderPage
 } from '@/types/consult'
 import { request } from '@/utils/request'
 export const getKonwledgePage = (params: KnowledgeParams) =>
@@ -70,3 +72,7 @@ export const evaluateConsultOrder = (data: {
     content: string
     anonymousFlag: 0 | 1
 }) => request('patient/order/evaluate', 'POST', data)
+
+// 请求问诊记录列表数据的API函数
+export const getConsultOrderList = (params: ConsultOrderListParams) =>
+    request<ConsultOrderPage>('patient/consult/order/list', 'GET', params)
