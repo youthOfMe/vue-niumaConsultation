@@ -90,7 +90,7 @@ onMounted(() => {
         const arr: Message[] = []
         data.forEach((item, i) => {
             // 记录每一段消息中最早的消息时间，获取聊天记录使用
-            if (i === 0) return (time.value = item.createTime)
+            if (i === 0) time.value = item.createTime
             arr.push({
                 msgType: MsgType.Notify,
                 msg: {
@@ -102,6 +102,7 @@ onMounted(() => {
             arr.push(...item.items)
         })
         list.value.unshift(...arr)
+        console.log(list.value)
         // 加载聊天记录后执行的功能
         loading.value = false
         if (!arr.length) return showToast('暂无更多聊天记录')
