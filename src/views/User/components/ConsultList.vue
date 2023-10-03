@@ -20,6 +20,7 @@ const loading = ref(false)
 const finished = ref(false)
 const list = ref<ConsultOrderItem[]>([])
 const onLoad = async () => {
+    // loading.value = true
     const res = await getConsultOrderList(params.value)
     list.value.push(...res.data.rows)
     if (params.value.current < res.data.pageTotal) {

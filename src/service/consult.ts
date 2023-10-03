@@ -76,3 +76,7 @@ export const evaluateConsultOrder = (data: {
 // 请求问诊记录列表数据的API函数
 export const getConsultOrderList = (params: ConsultOrderListParams) =>
     request<ConsultOrderPage>('patient/consult/order/list', 'GET', params)
+
+// 准备取消订单的API
+export const cancelOrder = (id: string) =>
+    request(`patient/order/cancel/${id}`, 'PUT')
