@@ -1,26 +1,17 @@
 <script setup lang="ts">
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { cancelOrder, deleteOrder } from '@/service/consult'
 import { showFailToast, showSuccessToast } from 'vant'
 import { useShowPrescription } from '@/composables'
+import ConsultMore from './ConsultMore.vue'
 
-const props = defineProps<{
+defineProps<{
     item: ConsultOrderItem
 }>()
 
 // 更多操作
-const showPopover = ref(false)
-const actions = computed(() => [
-    { text: '查看处方', disabled: !props.item.prescriptionId },
-    { text: '删除订单' },
-    { text: '暮雪老狗' }
-])
-const onSelect = (actions: { text: string }, i: number) => {
-    if (i === 1) deleteConsultOrder(props.item)
-    if (i === 0) onShowPrescription(props.item.prescriptionId)
-}
 
 // 取消订单
 const loading = ref(false)
@@ -149,16 +140,13 @@ const { onShowPrescription } = useShowPrescription()
         </div>
         <!-- 已完成 -->
         <div class="foot" v-if="item.status === OrderType.ConsultComplete">
-            <div class="more">
-                <van-popover
-                    v-model:show="showPopover"
-                    :actions="actions"
-                    @select="onSelect"
-                    placement="top-start"
-                >
-                    <template #reference>更多</template>
-                </van-popover>
-            </div>
+            <!-- 更多组件 -->
+            <consult-more
+                :disabled="!item.prescriptionId"
+                @on-preview="onShowPrescription(item.prescriptionId)"
+                @on-delete="deleteConsultOrder(item)"
+            >
+            </consult-more>
             <van-button
                 class="gray"
                 plain
@@ -257,11 +245,6 @@ const { onShowPrescription } = useShowPrescription()
                 color: var(--cp-text3);
                 background-color: var(--cp-bg);
             }
-        }
-        .more {
-            color: var(--cp-tag);
-            flex: 1;
-            font-size: 13px;
         }
     }
 }
