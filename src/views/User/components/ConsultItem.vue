@@ -1,10 +1,22 @@
 <script setup lang="ts">
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
+import { ref, computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
     item: ConsultOrderItem
 }>()
+
+// 更多操作
+const showPopover = ref(false)
+const actions = computed(() => [
+    { text: '查看处方', disabled: !props.item.prescriptionId },
+    { text: '删除订单' },
+    { text: '暮雪老狗' }
+])
+const onSelect = () => {
+    console.log('选择咯')
+}
 </script>
 
 <template>
@@ -105,6 +117,16 @@ defineProps<{
         </div>
         <!-- 已取消 -->
         <div class="foot" v-if="item.status === OrderType.ConsultCancel">
+            <div class="more">
+                <van-popover
+                    v-model:show="showPopover"
+                    :actions="actions"
+                    @select="onSelect"
+                    placement="top-start"
+                >
+                    <template #reference>更多</template>
+                </van-popover>
+            </div>
             <van-button class="gray" plain size="small" round
                 >删除订单</van-button
             >
