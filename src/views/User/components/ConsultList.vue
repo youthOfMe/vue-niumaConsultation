@@ -30,6 +30,13 @@ const onLoad = async () => {
     }
     loading.value = false
 }
+
+// 配置删除订单
+const onDelete = (id: string) => {
+    list.value = list.value.filter((item) => item.id != id)
+    // 如果删除订单后列表中没有了数据就进行重新发送请求，加载数据
+    if (!list.value.length) onLoad()
+}
 </script>
 
 <template>
@@ -44,6 +51,7 @@ const onLoad = async () => {
                 v-for="item in list"
                 :key="item.id"
                 :item="item"
+                @on-delete="onDelete"
             ></consult-item>
         </van-list>
     </div>

@@ -80,3 +80,7 @@ export const getConsultOrderList = (params: ConsultOrderListParams) =>
 // 准备取消订单的API
 export const cancelOrder = (id: string) =>
     request(`patient/order/cancel/${id}`, 'PUT')
+
+// 准备删除订单的API
+export const deleteOrder = (id: string) =>
+    request(`patient/order/${id}`, 'DELETE')

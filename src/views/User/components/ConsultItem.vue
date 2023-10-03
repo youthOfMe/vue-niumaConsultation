@@ -2,7 +2,7 @@
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
 import { ref, computed } from 'vue'
-import { cancelOrder } from '@/service/consult'
+import { cancelOrder, deleteOrder } from '@/service/consult'
 import { showFailToast, showSuccessToast } from 'vant'
 
 const props = defineProps<{
@@ -16,8 +16,8 @@ const actions = computed(() => [
     { text: '删除订单' },
     { text: '暮雪老狗' }
 ])
-const onSelect = () => {
-    console.log('选择咯')
+const onSelect = (actions: { text: string }, i: number) => {
+    if (i === 1) deleteConsultOrder(props.item)
 }
 
 // 取消订单
@@ -33,6 +33,24 @@ const cancelConsultOrder = async (item: ConsultOrderItem) => {
         showFailToast('取消失败')
     } finally {
         loading.value = false
+    }
+}
+
+// 删除订单
+const emit = defineEmits<{
+    (e: 'on-delete', id: string): void
+}>()
+const deleteLoading = ref(false)
+const deleteConsultOrder = async (item: ConsultOrderItem) => {
+    try {
+        deleteLoading.value = true
+        await deleteOrder(item.id)
+        showSuccessToast('删除成功')
+        emit('on-delete', item.id)
+    } catch (error) {
+        showFailToast('删除失败')
+    } finally {
+        deleteLoading.value = false
     }
 }
 </script>
@@ -125,6 +143,16 @@ const cancelConsultOrder = async (item: ConsultOrderItem) => {
         </div>
         <!-- 已完成 -->
         <div class="foot" v-if="item.status === OrderType.ConsultComplete">
+            <div class="more">
+                <van-popover
+                    v-model:show="showPopover"
+                    :actions="actions"
+                    @select="onSelect"
+                    placement="top-start"
+                >
+                    <template #reference>更多</template>
+                </van-popover>
+            </div>
             <van-button
                 class="gray"
                 plain
@@ -147,17 +175,13 @@ const cancelConsultOrder = async (item: ConsultOrderItem) => {
         </div>
         <!-- 已取消 -->
         <div class="foot" v-if="item.status === OrderType.ConsultCancel">
-            <div class="more">
-                <van-popover
-                    v-model:show="showPopover"
-                    :actions="actions"
-                    @select="onSelect"
-                    placement="top-start"
-                >
-                    <template #reference>更多</template>
-                </van-popover>
-            </div>
-            <van-button class="gray" plain size="small" round
+            <van-button
+                class="gray"
+                plain
+                size="small"
+                round
+                @click="deleteConsultOrder(item)"
+                :loading="deleteLoading"
                 >删除订单</van-button
             >
             <van-button type="primary" plain size="small" round :to="'/home'"
