@@ -1,4 +1,4 @@
-import { IllnessTime } from '@/enums'
+import { IllnessTime, ConsultType } from '@/enums'
 
 // 准备看病时间帮的那个数据
 const timeOptions = [
@@ -14,4 +14,11 @@ const flagOptions = [
     { label: '没就诊过', value: 0 }
 ]
 
-export { timeOptions, flagOptions }
+// 准备选择就诊类型的单选框数据
+const typeOptions = [
+    { label: '问医生', value: ConsultType.Doctor },
+    { label: '极速问诊', value: ConsultType.Fast },
+    { label: '开药门诊', value: ConsultType.Medication }
+]
+
+export { timeOptions, flagOptions, typeOptions }

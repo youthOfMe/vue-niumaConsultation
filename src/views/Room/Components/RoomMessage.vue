@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import type { Message } from '@/types/room'
 import type { Image } from '@/types/consult'
-import { timeOptions, flagOptions } from '@/service/constants'
-import { IllnessTime, MsgType } from '@/enums'
+import { MsgType } from '@/enums'
 import { showImagePreview, showToast } from 'vant'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/stores'
 import EvaluateCard from './EvaluateCard.vue'
 import { useShowPrescription } from '@/composables'
+// 获取患病事件和是否进行治疗过
+import { getIllnessTimeText, getConsultFlagText } from '@/utils/filter'
 
 const props = defineProps<{
     item: Message
 }>()
-
-// 获取患病时间
-const getIllnessTimeText = (time: IllnessTime) =>
-    timeOptions.find((item) => item.value === time)?.label
-// 获取是否治疗过
-const getConsultFlagText = (flag: 0 | 1) =>
-    flagOptions.find((item) => item.value === flag)?.label
 // 预览图片
 const onPreviewImage = (images?: Image[]) => {
     // 只需要传进去一个URL数组即可进行预览图片 只需要将images中的图片对象改为url即可
