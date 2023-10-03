@@ -1,5 +1,6 @@
-import { followOrUnfollow } from '@/service/consult'
+import { followOrUnfollow, getPrescriptionPic } from '@/service/consult'
 import type { Doctor, FollowType } from '@/types/consult'
+import { showImagePreview } from 'vant'
 import { ref } from 'vue'
 // Vue3概念: 通过组合式API封装 数据逻辑 在一起的函数叫做组合式API 书写规范都是usexxxxx
 // 在Composables文件中进行编写
@@ -17,4 +18,15 @@ export const useFollow = (type: FollowType = 'doc') => {
         }
     }
     return { loading, follow }
+}
+
+// 进行封装查看处方API
+export const useShowPrescription = () => {
+    const onShowPrescription = async (id?: string) => {
+        if (id) {
+            const res = await getPrescriptionPic(id)
+            showImagePreview([res.data.url])
+        }
+    }
+    return { onShowPrescription }
 }

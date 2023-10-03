@@ -6,8 +6,8 @@ import { IllnessTime, MsgType } from '@/enums'
 import { showImagePreview, showToast } from 'vant'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/stores'
-import { getPrescriptionPic } from '@/service/consult'
 import EvaluateCard from './EvaluateCard.vue'
+import { useShowPrescription } from '@/composables'
 
 const props = defineProps<{
     item: Message
@@ -37,12 +37,7 @@ const showImage = (item: Message) => {
 }
 
 // 查看处方图片
-const onShowPrescription = async (id?: string) => {
-    if (id) {
-        const res = await getPrescriptionPic(id)
-        showImagePreview([res.data.url])
-    }
-}
+const { onShowPrescription } = useShowPrescription()
 </script>
 
 <template>

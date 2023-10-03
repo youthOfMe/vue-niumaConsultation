@@ -4,6 +4,7 @@ import { OrderType } from '@/enums'
 import { ref, computed } from 'vue'
 import { cancelOrder, deleteOrder } from '@/service/consult'
 import { showFailToast, showSuccessToast } from 'vant'
+import { useShowPrescription } from '@/composables'
 
 const props = defineProps<{
     item: ConsultOrderItem
@@ -18,6 +19,7 @@ const actions = computed(() => [
 ])
 const onSelect = (actions: { text: string }, i: number) => {
     if (i === 1) deleteConsultOrder(props.item)
+    if (i === 0) onShowPrescription(props.item.prescriptionId)
 }
 
 // 取消订单
@@ -53,6 +55,9 @@ const deleteConsultOrder = async (item: ConsultOrderItem) => {
         deleteLoading.value = false
     }
 }
+
+// 查看处方图片
+const { onShowPrescription } = useShowPrescription()
 </script>
 
 <template>
@@ -130,6 +135,7 @@ const deleteConsultOrder = async (item: ConsultOrderItem) => {
                 size="small"
                 round
                 v-if="item.prescriptionId"
+                @click="onShowPrescription(item.prescriptionId)"
                 >查看处方</van-button
             >
             <van-button
