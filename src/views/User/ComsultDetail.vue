@@ -7,12 +7,16 @@ import {
     getConsultFlagText,
     getConsultType
 } from '@/utils/filter'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { getConsultOrderDetail } from '@/service/consult'
 import { OrderType } from '@/enums'
 import ConsultMore from './components/ConsultMore.vue'
-import { useCancelOrder } from '@/composables'
+import {
+    useCancelOrder,
+    useDeleteOrder,
+    useShowPrescription
+} from '@/composables'
 
 const route = useRoute()
 const item = ref<ConsultOrderItem>()
@@ -25,6 +29,16 @@ onMounted(async () => {
 
 // 取消订单
 const { loading, cancelConsultOrder } = useCancelOrder()
+
+// 删除订单
+const router = useRouter()
+const { loading: deleteLoading, deleteConsultOrder } = useDeleteOrder(() => {
+    router.push('/user/consult')
+})
+
+// 查看处方
+const showLoading = ref(false)
+const { onShowPrescription } = useShowPrescription()
 </script>
 
 <template>
@@ -164,7 +178,14 @@ const { loading, cancelConsultOrder } = useCancelOrder()
             class="detail-action van-hairline--top"
             v-if="item.status === OrderType.ConsultCancel"
         >
-            <van-button type="default" round> 删除订单</van-button>
+            <van-button
+                type="default"
+                round
+                :loading="deleteLoading"
+                @click="deleteConsultOrder(item)"
+            >
+                删除订单</van-button
+            >
             <van-button type="primary" round :to="`/home`"
                 >咨询其他医生</van-button
             >
