@@ -11,6 +11,7 @@ import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { getConsultOrderDetail } from '@/service/consult'
 import { OrderType } from '@/enums'
+import ConsultMore from './components/ConsultMore.vue'
 
 const route = useRoute()
 const item = ref<ConsultOrderItem>()
@@ -90,16 +91,67 @@ onMounted(async () => {
                 />
             </van-cell-group>
         </div>
-        <!-- <div class="detail-time">
-      请在 <van-count-down :time="10000 * 1000" /> 内完成支付，超时订单将取消
-    </div> -->
-        <div class="detail-action van-hairline--top">
+        <div class="detail-time" v-if="item.status === OrderType.ConsultPay">
+            请在
+            <van-count-down :time="item.countdown * 1000" />
+            内完成支付，超时订单将取消
+        </div>
+        <!-- 待支付 -->
+        <div
+            class="detail-action van-hairline--top"
+            v-if="item.status === OrderType.ConsultPay"
+        >
             <div class="price">
                 <span>需付款</span>
-                <span>￥39.00</span>
+                <span>￥{{ item.actualPayment.toFixed(2) }}</span>
             </div>
             <van-button type="default" round>取消问诊</van-button>
             <van-button type="primary" round>继续支付</van-button>
+        </div>
+        <!-- 等待中 -->
+        <div
+            class="detail-action van-hairline--top"
+            v-if="item.status === OrderType.ConsultWait"
+        >
+            <van-button type="default" round>取消问诊</van-button>
+            <van-button type="primary" round :to="`/room?orderId=${item.id}`"
+                >继续沟通</van-button
+            >
+        </div>
+        <!-- 问诊中 -->
+        <div
+            class="detail-action van-hairline--top"
+            v-if="item.status === OrderType.ConsultChat"
+        >
+            <van-button type="default" round v-if="item.prescriptionId">
+                查看处方</van-button
+            >
+            <van-button type="primary" round :to="`/room?orderId=${item.id}`"
+                >继续沟通</van-button
+            >
+        </div>
+        <!-- 问诊完成 -->
+        <div
+            class="detail-action van-hairline--top"
+            v-if="item.status === OrderType.ConsultComplete"
+        >
+            <consult-more></consult-more>
+            <van-button type="default" round :to="`/room?orderId=${item.id}`"
+                >问诊记录</van-button
+            >
+            <van-button type="primary" round :to="`/room?orderId=${item.id}`">{{
+                item.evaluateId ? '查看评价' : '写评价'
+            }}</van-button>
+        </div>
+        <!-- 已取消 -->
+        <div
+            class="detail-action van-hairline--top"
+            v-if="item.status === OrderType.ConsultCancel"
+        >
+            <van-button type="default" round> 删除订单</van-button>
+            <van-button type="primary" round :to="`/home`"
+                >咨询其他医生</van-button
+            >
         </div>
     </div>
     <div class="consult-detail-page" v-else>
