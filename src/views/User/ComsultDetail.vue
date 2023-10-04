@@ -12,6 +12,7 @@ import { ref, onMounted } from 'vue'
 import { getConsultOrderDetail } from '@/service/consult'
 import { OrderType } from '@/enums'
 import ConsultMore from './components/ConsultMore.vue'
+import { useCancelOrder } from '@/composables'
 
 const route = useRoute()
 const item = ref<ConsultOrderItem>()
@@ -21,6 +22,9 @@ onMounted(async () => {
         item.value = res.data
     }
 })
+
+// 取消订单
+const { loading, cancelConsultOrder } = useCancelOrder()
 </script>
 
 <template>
@@ -105,7 +109,13 @@ onMounted(async () => {
                 <span>需付款</span>
                 <span>￥{{ item.actualPayment.toFixed(2) }}</span>
             </div>
-            <van-button type="default" round>取消问诊</van-button>
+            <van-button
+                type="default"
+                round
+                :loading="loading"
+                @click="cancelConsultOrder(item)"
+                >取消问诊</van-button
+            >
             <van-button type="primary" round>继续支付</van-button>
         </div>
         <!-- 等待中 -->
@@ -113,7 +123,13 @@ onMounted(async () => {
             class="detail-action van-hairline--top"
             v-if="item.status === OrderType.ConsultWait"
         >
-            <van-button type="default" round>取消问诊</van-button>
+            <van-button
+                type="default"
+                round
+                :loading="loading"
+                @click="cancelConsultOrder(item)"
+                >取消问诊</van-button
+            >
             <van-button type="primary" round :to="`/room?orderId=${item.id}`"
                 >继续沟通</van-button
             >
