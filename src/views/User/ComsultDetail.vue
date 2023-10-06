@@ -153,7 +153,12 @@ const { onShowPrescription } = useShowPrescription()
             class="detail-action van-hairline--top"
             v-if="item.status === OrderType.ConsultChat"
         >
-            <van-button type="default" round v-if="item.prescriptionId">
+            <van-button
+                type="default"
+                round
+                v-if="item.prescriptionId"
+                @click="onShowPrescription(item.id)"
+            >
                 查看处方</van-button
             >
             <van-button type="primary" round :to="`/room?orderId=${item.id}`"
@@ -165,7 +170,10 @@ const { onShowPrescription } = useShowPrescription()
             class="detail-action van-hairline--top"
             v-if="item.status === OrderType.ConsultComplete"
         >
-            <consult-more></consult-more>
+            <consult-more
+                @on-delete="deleteConsultOrder(item)"
+                @on-preview="onShowPrescription(item.prescriptionId)"
+            ></consult-more>
             <van-button type="default" round :to="`/room?orderId=${item.id}`"
                 >问诊记录</van-button
             >
