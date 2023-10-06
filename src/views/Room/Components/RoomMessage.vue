@@ -37,6 +37,7 @@ const { onShowPrescription } = useShowPrescription()
 const router = useRouter()
 const buy = async (pre?: Prescription) => {
     if (!pre) return showToast('处方不存在')
+    console.log(pre.status)
     if (pre.status === PrescriptionStatus.Invalid) return showToast('该处方是无效的')
     if (pre.status === PrescriptionStatus.NotPayment && !pre.orderId)
         return showToast('跳转成功') && (await router.push(`/order/pay?id=${pre.id}`))
