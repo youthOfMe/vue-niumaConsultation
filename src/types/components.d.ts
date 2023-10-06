@@ -3,6 +3,7 @@ import CpIcon from '@/components/CpIcon.vue'
 import CpRadioBtn from '@/components/CpRaidoBtn.vue'
 import KnowledgeCard from '@/views/Home/components/KnowledgeCard.vue'
 import KnowledgeList from '@/views/Home/components/KnowledgeList.vue'
+import CpPaySheet from '@/components/CpPaySheet.vue'
 
 declare module 'vue' {
     interface GlobalComponents {
@@ -12,5 +13,6 @@ declare module 'vue' {
         CpRadioBtn: typeof CpRadioBtn
         KnowledgeCard: typeof KnowledgeCard
         KnowledgeList: typeof KnowledgeList
+        CpPaySheet: typeof CpPaySheet
     }
 }

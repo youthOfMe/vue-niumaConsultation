@@ -49,6 +49,9 @@ const onCopy = async () => {
     await copy(item.value?.orderNo || '')
     showToast('已复制')
 }
+
+// 配置支付抽屉
+const show = ref(false)
 </script>
 
 <template>
@@ -208,6 +211,13 @@ const onCopy = async () => {
                 >咨询其他医生</van-button
             >
         </div>
+        <!-- 支付抽屉 -->
+        <cp-pay-sheet
+            v-model:show="show"
+            :order-id="item.id"
+            :actual-payment="item.actualPayment"
+        >
+        </cp-pay-sheet>
     </div>
     <div class="consult-detail-page" v-else>
         <cp-native-bar :title="$route.meta.title"></cp-native-bar>
