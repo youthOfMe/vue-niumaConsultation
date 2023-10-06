@@ -5,9 +5,11 @@ import { areaList } from '@vant/area-data'
 
 <template>
     <div class="address-add-page">
-        <cp-native-bar :title="$route.meta.title" right-test="确认"></cp-native-bar>
-        <van-area :area-list="areaList" />
+        <van-area :area-list="areaList" visible-option-num="6" />
     </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.van-area {
+}
+</style>

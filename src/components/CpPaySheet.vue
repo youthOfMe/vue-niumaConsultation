@@ -8,6 +8,7 @@ const props = defineProps<{
     orderId: string
     actualPayment: number
     onClose?: () => void
+    payCallback: string
 }>()
 
 // 配置进行支付橱窗是否显示
@@ -23,7 +24,7 @@ const pay = async () => {
     const res = await getConsultOrderPayUrl({
         orderId: props.orderId,
         paymentMethod: paymentMethod.value,
-        payCallback: 'http://localhost:5173/room'
+        payCallback: 'http://localhost:5173/' + props.payCallback
     })
     window.location.href = res.data.payUrl
 }

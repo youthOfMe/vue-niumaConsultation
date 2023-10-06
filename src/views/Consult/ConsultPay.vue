@@ -151,6 +151,7 @@ onMounted(() => {
             :order-id="orderId"
             :actual-payment="payInfo.payment"
             :on-close="onClose"
+            pay-callback="/room"
         >
         </cp-pay-sheet>
     </div>

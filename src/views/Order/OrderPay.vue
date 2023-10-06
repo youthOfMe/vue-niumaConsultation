@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { getMedicalOrderPre, getAddressList } from '@/service/order'
+import { getMedicalOrderPre, getAddressList, createMedicalOrder } from '@/service/order'
 import type { OrderPre, AddressItem } from '@/types/order'
 import { ref, onMounted } from 'vue'
+import { showToast } from 'vant'
+import CpPaySheet from '@/components/CpPaySheet.vue'
 
 // 获取预支付信息
 const route = useRoute()
@@ -23,6 +25,33 @@ const loadAddress = async () => {
         const defAddress = addRes.data.find((item) => item.isDefault)
         if (defAddress) address.value = defAddress
         else address.value = addRes.data[0]
+    }
+}
+
+// 创建药品订单
+const agree = ref(false)
+const loading = ref(false)
+const orderId = ref('')
+const show = ref(false)
+const onSubmit = async () => {
+    if (!agree.value) return showToast('请勾选用户协议')
+    if (!address.value?.id) return showToast('请选择收货地址')
+    if (!orderPre.value?.id) return showToast('未找到处方')
+    if (orderId.value) return showToast('订单已存在，请勿重复支付')
+    try {
+        loading.value = true
+        const res = await createMedicalOrder({
+            id: orderPre.value?.id,
+            addressId: address.value.id,
+            couponId: orderPre.value?.couponId
+        })
+        orderId.value = res.data.id
+        loading.value = false
+        // 创建好订单ID之后进行打开支付抽屉
+        show.value = true
+    } catch (error) {
+        loading.value = false
+        showToast('创建订单')
     }
 }
 
@@ -80,14 +109,23 @@ onMounted(() => {
                 由于药品的特殊性，如非错发、漏发药品的情况，药品一经发出
                 不得退换，请核对药品信息无误后下单。
             </p>
-            <van-checkbox>我已同意<a href="javascript:;">支付协议</a></van-checkbox>
+            <van-checkbox v-model="agree">我已同意<a href="javascript:;">支付协议</a></van-checkbox>
         </div>
         <van-submit-bar
             :price="50 * 100"
             button-text="立即支付"
             button-type="primary"
             text-align="left"
+            :loading="loading"
+            @click="onSubmit"
         ></van-submit-bar>
+        <cp-pay-sheet
+            :show="show"
+            :order-id="orderId"
+            :actual-payment="orderPre.actualPayment"
+            pay-callback="order/pay/result"
+        >
+        </cp-pay-sheet>
     </div>
     <div class="order-pay-page" v-else>
         <cp-native-bar :title="$route.meta.title" />
