@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
-import {
-    useShowPrescription,
-    useCancelOrder,
-    useDeleteOrder
-} from '@/composables'
+import { useShowPrescription, useCancelOrder, useDeleteOrder } from '@/composables'
 import ConsultMore from './ConsultMore.vue'
 
 const props = defineProps<{
@@ -65,12 +61,7 @@ const { onShowPrescription } = useShowPrescription()
                 @click="cancelConsultOrder(item)"
                 >取消问诊</van-button
             >
-            <van-button
-                type="primary"
-                plain
-                size="small"
-                round
-                :to="`/user/consult/${item.id}`"
+            <van-button type="primary" plain size="small" round :to="`/user/consult/${item.id}`"
                 >去支付</van-button
             >
         </div>
@@ -85,12 +76,7 @@ const { onShowPrescription } = useShowPrescription()
                 @click="cancelConsultOrder(item)"
                 >取消问诊</van-button
             >
-            <van-button
-                type="primary"
-                plain
-                size="small"
-                round
-                :to="`/room?orderId=${item.id}`"
+            <van-button type="primary" plain size="small" round :to="`/room?orderId=${item.id}`"
                 >继续沟通</van-button
             >
         </div>
@@ -105,12 +91,7 @@ const { onShowPrescription } = useShowPrescription()
                 @click="onShowPrescription(item.prescriptionId)"
                 >查看处方</van-button
             >
-            <van-button
-                type="primary"
-                plain
-                size="small"
-                round
-                :to="`/user/consult/${item.id}`"
+            <van-button type="primary" plain size="small" round :to="`/user/consult/${item.id}`"
                 >继续沟通</van-button
             >
         </div>
@@ -123,25 +104,13 @@ const { onShowPrescription } = useShowPrescription()
                 @on-delete="deleteConsultOrder(item)"
             >
             </consult-more>
-            <van-button
-                class="gray"
-                plain
-                size="small"
-                round
-                :to="`/room?orderId=${item.id}`"
+            <van-button class="gray" plain size="small" round :to="`/room?orderId=${item.id}`"
                 >问诊记录</van-button
             >
-            <van-button
-                type="primary"
-                plain
-                size="small"
-                round
-                v-if="item.evaluateId"
+            <van-button type="primary" plain size="small" round v-if="item.evaluateId"
                 >查看评价</van-button
             >
-            <van-button type="primary" plain size="small" round v-else
-                >写评价</van-button
-            >
+            <van-button type="primary" plain size="small" round v-else>写评价</van-button>
         </div>
         <!-- 已取消 -->
         <div class="foot" v-if="item.status === OrderType.ConsultCancel">
