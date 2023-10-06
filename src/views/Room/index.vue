@@ -153,11 +153,9 @@ onUnmounted(() => {
 <template>
     <div class="room-page">
         <cp-native-bar title="牛马问诊室"></cp-native-bar>
-        <room-status :status="consult?.status" :countdown="consult?.countdown">
-        </room-status>
+        <room-status :status="consult?.status" :countdown="consult?.countdown"> </room-status>
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <room-message v-for="item in list" :key="item.id" :item="item">
-            </room-message>
+            <room-message v-for="item in list" :key="item.id" :item="item"> </room-message>
         </van-pull-refresh>
         <room-actions
             :disabled="consult?.status === 2"

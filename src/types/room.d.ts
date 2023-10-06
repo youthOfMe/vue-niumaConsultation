@@ -37,7 +37,7 @@ export type EvaluateDoc = {
 }
 
 // 进行配置处方类型
-export type prescription = {
+export type Prescription = {
     // 处方ID
     id: string
     // 药品ID
