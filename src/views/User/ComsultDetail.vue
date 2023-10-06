@@ -2,21 +2,13 @@
 import CpNativeBar from '@/components/CpNativeBar.vue'
 import type { ConsultOrderItem } from '@/types/consult'
 // 获取患病事件和是否进行治疗过
-import {
-    getIllnessTimeText,
-    getConsultFlagText,
-    getConsultType
-} from '@/utils/filter'
+import { getIllnessTimeText, getConsultFlagText, getConsultType } from '@/utils/filter'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { getConsultOrderDetail } from '@/service/consult'
 import { OrderType } from '@/enums'
 import ConsultMore from './components/ConsultMore.vue'
-import {
-    useCancelOrder,
-    useDeleteOrder,
-    useShowPrescription
-} from '@/composables'
+import { useCancelOrder, useDeleteOrder, useShowPrescription } from '@/composables'
 import { useClipboard } from '@vueuse/core'
 import { showToast } from 'vant'
 
@@ -85,14 +77,8 @@ const show = ref(false)
                     title="患者信息"
                     :value="`${item.patientInfo.name} | ${item.patientInfo.genderValue} | ${item.patientInfo.age}岁`"
                 />
-                <van-cell
-                    title="患病时长"
-                    :value="getIllnessTimeText(item.illnessTime)"
-                />
-                <van-cell
-                    title="就诊情况"
-                    :value="getConsultFlagText(item.consultFlag)"
-                />
+                <van-cell title="患病时长" :value="getIllnessTimeText(item.illnessTime)" />
+                <van-cell title="就诊情况" :value="getConsultFlagText(item.consultFlag)" />
                 <van-cell title="病情描述" :label="item.illnessDesc" />
             </van-cell-group>
         </div>
@@ -107,19 +93,9 @@ const show = ref(false)
                 </van-cell>
                 <van-cell title="创建时间" :value="item.createTime" />
                 <van-cell title="应付款" :value="`￥${item.payment}`" />
-                <van-cell
-                    title="优惠券"
-                    :value="`-￥${item.couponDeduction}`"
-                />
-                <van-cell
-                    title="积分抵扣"
-                    :value="`-￥${item.pointDeduction}`"
-                />
-                <van-cell
-                    title="实付款"
-                    :value="`￥${item.actualPayment}`"
-                    class="price"
-                />
+                <van-cell title="优惠券" :value="`-￥${item.couponDeduction}`" />
+                <van-cell title="积分抵扣" :value="`-￥${item.pointDeduction}`" />
+                <van-cell title="实付款" :value="`￥${item.actualPayment}`" class="price" />
             </van-cell-group>
         </div>
         <div class="detail-time" v-if="item.status === OrderType.ConsultPay">
@@ -128,46 +104,25 @@ const show = ref(false)
             内完成支付，超时订单将取消
         </div>
         <!-- 待支付 -->
-        <div
-            class="detail-action van-hairline--top"
-            v-if="item.status === OrderType.ConsultPay"
-        >
+        <div class="detail-action van-hairline--top" v-if="item.status === OrderType.ConsultPay">
             <div class="price">
                 <span>需付款</span>
                 <span>￥{{ item.actualPayment.toFixed(2) }}</span>
             </div>
-            <van-button
-                type="default"
-                round
-                :loading="loading"
-                @click="cancelConsultOrder(item)"
+            <van-button type="default" round :loading="loading" @click="cancelConsultOrder(item)"
                 >取消问诊</van-button
             >
-            <van-button type="primary" round @click="show = true"
-                >继续支付</van-button
-            >
+            <van-button type="primary" round @click="show = true">继续支付</van-button>
         </div>
         <!-- 等待中 -->
-        <div
-            class="detail-action van-hairline--top"
-            v-if="item.status === OrderType.ConsultWait"
-        >
-            <van-button
-                type="default"
-                round
-                :loading="loading"
-                @click="cancelConsultOrder(item)"
+        <div class="detail-action van-hairline--top" v-if="item.status === OrderType.ConsultWait">
+            <van-button type="default" round :loading="loading" @click="cancelConsultOrder(item)"
                 >取消问诊</van-button
             >
-            <van-button type="primary" round :to="`/room?orderId=${item.id}`"
-                >继续沟通</van-button
-            >
+            <van-button type="primary" round :to="`/room?orderId=${item.id}`">继续沟通</van-button>
         </div>
         <!-- 问诊中 -->
-        <div
-            class="detail-action van-hairline--top"
-            v-if="item.status === OrderType.ConsultChat"
-        >
+        <div class="detail-action van-hairline--top" v-if="item.status === OrderType.ConsultChat">
             <van-button
                 type="default"
                 round
@@ -176,9 +131,7 @@ const show = ref(false)
             >
                 查看处方</van-button
             >
-            <van-button type="primary" round :to="`/room?orderId=${item.id}`"
-                >继续沟通</van-button
-            >
+            <van-button type="primary" round :to="`/room?orderId=${item.id}`">继续沟通</van-button>
         </div>
         <!-- 问诊完成 -->
         <div
@@ -189,18 +142,13 @@ const show = ref(false)
                 @on-delete="deleteConsultOrder(item)"
                 @on-preview="onShowPrescription(item.prescriptionId)"
             ></consult-more>
-            <van-button type="default" round :to="`/room?orderId=${item.id}`"
-                >问诊记录</van-button
-            >
+            <van-button type="default" round :to="`/room?orderId=${item.id}`">问诊记录</van-button>
             <van-button type="primary" round :to="`/room?orderId=${item.id}`">{{
                 item.evaluateId ? '查看评价' : '写评价'
             }}</van-button>
         </div>
         <!-- 已取消 -->
-        <div
-            class="detail-action van-hairline--top"
-            v-if="item.status === OrderType.ConsultCancel"
-        >
+        <div class="detail-action van-hairline--top" v-if="item.status === OrderType.ConsultCancel">
             <van-button
                 type="default"
                 round
@@ -209,16 +157,10 @@ const show = ref(false)
             >
                 删除订单</van-button
             >
-            <van-button type="primary" round :to="`/home`"
-                >咨询其他医生</van-button
-            >
+            <van-button type="primary" round :to="`/home`">咨询其他医生</van-button>
         </div>
         <!-- 支付抽屉 -->
-        <cp-pay-sheet
-            v-model:show="show"
-            :order-id="item.id"
-            :actual-payment="item.actualPayment"
-        >
+        <cp-pay-sheet v-model:show="show" :order-id="item.id" :actual-payment="item.actualPayment">
         </cp-pay-sheet>
     </div>
     <div class="consult-detail-page" v-else>
@@ -242,11 +184,7 @@ const show = ref(false)
         top: 0;
         width: 100%;
         height: 135px;
-        background: linear-gradient(
-            180deg,
-            rgba(44, 181, 165, 0),
-            rgba(44, 181, 165, 0.2)
-        );
+        background: linear-gradient(180deg, rgba(44, 181, 165, 0), rgba(44, 181, 165, 0.2));
         border-bottom-left-radius: 150px 20px;
         border-bottom-right-radius: 150px 20px;
     }
