@@ -65,6 +65,16 @@ const router = createRouter({
             meta: { title: '药品支付' }
         },
         {
+            path: '/address/manage',
+            component: () => import('@/views/Address/AddressList.vue'),
+            meta: { title: '地址管理' }
+        },
+        {
+            path: '/address/add',
+            component: () => import('@/views/Address/AddAddress.vue'),
+            meta: { title: '添加地址' }
+        },
+        {
             path: '/',
             component: () => import('@/views/Layout/index.vue'),
             children: [

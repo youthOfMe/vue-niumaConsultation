@@ -21,6 +21,7 @@ instance.interceptors.request.use(
         if (store.user?.token) {
             if (store.user?.token && config.headers) {
                 config.headers.Authorization = `Bearer ${store.user.token}`
+                console.log(config.headers.Authorization)
             }
         }
         return config
@@ -67,11 +68,7 @@ type Data<T> = {
     data: T
 }
 
-export const request = <T>(
-    url: string,
-    method: Method = 'GET',
-    submitData?: object
-) => {
+export const request = <T>(url: string, method: Method = 'GET', submitData?: object) => {
     // 参数 : 地址 请求方式 提交的数据
     // 返回 : promise
     return instance.request<any, Data<T>>({

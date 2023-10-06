@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import router from '@/router'
 import { getUserInfo } from '@/service/user'
 import { useUserStore } from '@/stores'
 import type { UserInfo } from '@/types/user'
@@ -19,7 +18,7 @@ const tools = [
     { label: '我的问诊', path: '/user/consult' },
     { label: '我的处方', path: '/' },
     { label: '家庭档案', path: '/user/patient' },
-    { label: '地址管理', path: '/' },
+    { label: '地址管理', path: '/address/manage' },
     { label: '我的评价', path: '/' },
     { label: '客服官方', path: '/' },
     { label: '设置', path: '/' }
@@ -74,9 +73,7 @@ const onLogout = async () => {
         <div class="user-page-order">
             <div class="head">
                 <h3>药品订单</h3>
-                <router-link to="/order"
-                    >全部订单 <van-icon name="arrow"
-                /></router-link>
+                <router-link to="/order">全部订单 <van-icon name="arrow" /></router-link>
             </div>
             <van-row>
                 <van-col span="6">
@@ -115,9 +112,7 @@ const onLogout = async () => {
                 :key="item.label"
                 :to="item.path"
             >
-                <template #icon
-                    ><cp-icon :name="`user-tool-0${index + 1}`"
-                /></template>
+                <template #icon><cp-icon :name="`user-tool-0${index + 1}`" /></template>
             </van-cell>
         </div>
         <!-- 退出登录 -->
@@ -133,11 +128,7 @@ const onLogout = async () => {
     // 头部
     &-head {
         height: 200px;
-        background: linear-gradient(
-            180deg,
-            rgba(44, 181, 165, 0.46),
-            rgba(44, 181, 165, 0)
-        );
+        background: linear-gradient(180deg, rgba(44, 181, 165, 0.46), rgba(44, 181, 165, 0));
         margin: 0 -15px;
         padding: 0 15px;
         .top {
