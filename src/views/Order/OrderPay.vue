@@ -5,6 +5,7 @@ import type { OrderPre, AddressItem } from '@/types/order'
 import { ref, onMounted } from 'vue'
 import { showToast } from 'vant'
 import CpPaySheet from '@/components/CpPaySheet.vue'
+import OrderMedical from './Components/OrderMedical.vue'
 
 // 获取预支付信息
 const route = useRoute()
@@ -75,27 +76,8 @@ onMounted(() => {
                 {{ address.mobile.replace(/^(\d{3})\d{4}(\d{4})$/g, '$1****$2') }}
             </p>
         </div>
-        <div class="order-medical">
-            <div class="head">
-                <h3>牛马药房</h3>
-                <small>牛马质保 假一赔十</small>
-            </div>
-            <div class="item van-hairline--top" v-for="med in orderPre.medicines" :key="med.id">
-                <img class="img" src="@/assets/ad.png" alt="" />
-                <div class="info">
-                    <p class="name">
-                        <span>{{ med.name }}</span>
-                        <span>x{{ med.quantity }}</span>
-                    </p>
-                    <p class="size">
-                        <van-tag>{{ med.prescriptionFlag ? '处方药' : '非处方药' }}</van-tag>
-                        <span>{{ med.specs }}</span>
-                    </p>
-                    <p class="price">￥{{ med.amount }}</p>
-                </div>
-                <div class="desc">{{ med.usageDosag }}</div>
-            </div>
-        </div>
+        <!-- 药品列表 -->
+        <order-medical :medicines="orderPre.medicines" v-if="orderPre"></order-medical>
         <div class="order-detail">
             <van-cell-group>
                 <van-cell title="药品金额" :value="`￥${orderPre.payment}`" />

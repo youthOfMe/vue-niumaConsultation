@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import type { OrderDetail } from '@/types/order'
-import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getMedicalOrderDetail } from '@/service/order'
 import { OrderType } from '@/enums'
+import { useOrderDetail } from '@/composables'
 
-const order = ref<OrderDetail>()
 const route = useRoute()
-onMounted(async () => {
-    const res = await getMedicalOrderDetail(route.query.orderId as string)
-    order.value = res.data
-})
+const { order } = useOrderDetail(route.query.orderId as string)
 </script>
 
 <template>

@@ -1,13 +1,10 @@
 import { OrderType } from '@/enums'
-import {
-    cancelOrder,
-    deleteOrder,
-    followOrUnfollow,
-    getPrescriptionPic
-} from '@/service/consult'
+import { cancelOrder, deleteOrder, followOrUnfollow, getPrescriptionPic } from '@/service/consult'
+import { getMedicalOrderDetail } from '@/service/order'
 import type { ConsultOrderItem, FollowType } from '@/types/consult'
+import type { OrderDetail } from '@/types/order'
 import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 // Vue3概念: 通过组合式API封装 数据逻辑 在一起的函数叫做组合式API 书写规范都是usexxxxx
 // 在Composables文件中进行编写
 export const useFollow = (type: FollowType = 'doc') => {
@@ -72,4 +69,14 @@ export const useDeleteOrder = (cb: () => void) => {
         }
     }
     return { loading, deleteConsultOrder }
+}
+
+// 封装获取订单详情
+export const useOrderDetail = (id: string) => {
+    const order = ref<OrderDetail>()
+    onMounted(async () => {
+        const res = await getMedicalOrderDetail(id)
+        order.value = res.data
+    })
+    return { order }
 }
