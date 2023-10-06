@@ -143,7 +143,9 @@ const show = ref(false)
                 @click="cancelConsultOrder(item)"
                 >取消问诊</van-button
             >
-            <van-button type="primary" round>继续支付</van-button>
+            <van-button type="primary" round @click="show = true"
+                >继续支付</van-button
+            >
         </div>
         <!-- 等待中 -->
         <div
