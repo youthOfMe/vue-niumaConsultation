@@ -19,7 +19,7 @@ const { order } = useOrderDetail(route.params.id as string)
         <p class="detail">建材城西路金燕龙办公楼999号</p>
         <p>李富贵 13211112222</p>
       </div> -->
-            <div class="card">
+            <div class="card" @click="$router.push(`/order/logistics/${order?.id}`)">
                 <div class="logistics">
                     <p>【东莞市】您的包裹已由物流公司揽收</p>
                     <p>2019-07-14 17:42:12</p>
