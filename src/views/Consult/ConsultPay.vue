@@ -64,8 +64,7 @@ const router = useRouter()
 const onClose = () => {
     return showConfirmDialog({
         title: '牛马提示',
-        message:
-            '取消支付将无法得到医生的回复，医生接诊名额有限，是否确认取消呢',
+        message: '取消支付将无法得到医生的回复，医生接诊名额有限，是否确认取消呢',
         cancelButtonText: '狠心离开',
         confirmButtonText: '狠心支付'
     })
@@ -94,14 +93,11 @@ onMounted(() => {
         'consultFlag',
         'patientId'
     ]
-    const valid = validKeys.every(
-        (key) => consultStore.consult[key] !== undefined
-    )
+    const valid = validKeys.every((key) => consultStore.consult[key] !== undefined)
     if (!valid) {
         return showDialog({
             title: '牛马提示',
-            message:
-                '问诊信息不完整请重新添加，如果有未支付的问诊订单可以在问诊记录中进行查看',
+            message: '问诊信息不完整请重新添加，如果有未支付的问诊订单可以在问诊记录中进行查看',
             closeOnPopstate: false
         }).then(() => {
             router.push('/home')
@@ -127,15 +123,8 @@ onMounted(() => {
         </div>
         <van-cell-group>
             <van-cell title="优惠券" :value="`-￥${payInfo.couponDeduction}`" />
-            <van-cell
-                title="积分抵扣"
-                :value="`-￥${payInfo.pointDeduction}`"
-            />
-            <van-cell
-                title="实付款"
-                :value="`¥${payInfo.actualPayment}`"
-                class="pay-price"
-            />
+            <van-cell title="积分抵扣" :value="`-￥${payInfo.pointDeduction}`" />
+            <van-cell title="实付款" :value="`¥${payInfo.actualPayment}`" class="pay-price" />
         </van-cell-group>
         <div class="pay-space"></div>
         <van-cell-group>
@@ -143,15 +132,10 @@ onMounted(() => {
                 title="患者信息"
                 :value="`${patient.name} | ${patient.genderValue} | ${patient.age}岁`"
             ></van-cell>
-            <van-cell
-                title="病情描述"
-                :label="consultStore.consult.illnessDesc"
-            ></van-cell>
+            <van-cell title="病情描述" :label="consultStore.consult.illnessDesc"></van-cell>
         </van-cell-group>
         <div class="pay-schema">
-            <van-checkbox v-model="agree"
-                >我已同意 <span class="text">支付协议</span></van-checkbox
-            >
+            <van-checkbox v-model="agree">我已同意 <span class="text">支付协议</span></van-checkbox>
         </div>
         <van-submit-bar
             button-type="primary"
@@ -233,27 +217,6 @@ onMounted(() => {
     .van-submit-bar__button {
         font-weight: normal;
         width: 160px;
-    }
-}
-.pay-type {
-    .amount {
-        padding: 20px;
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    .btn {
-        padding: 15px;
-    }
-    .van-cell {
-        align-items: center;
-        .cp-icon {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-        .van-checkbox :deep(.van-checkbox__icon) {
-            font-size: 16px;
-        }
     }
 }
 </style>

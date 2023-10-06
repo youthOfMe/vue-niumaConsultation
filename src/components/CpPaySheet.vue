@@ -43,30 +43,42 @@ const pay = async () => {
                 <p class="amount">￥{{ props.actualPayment.toFixed(2) }}</p>
                 <van-cell-group>
                     <van-cell title="微信支付" @click="paymentMethod = 0">
-                        <template #icon
-                            ><cp-icon name="consult-wechat"
-                        /></template>
-                        <template #extra
-                            ><van-checkbox :checked="paymentMethod === 0"
-                        /></template>
+                        <template #icon><cp-icon name="consult-wechat" /></template>
+                        <template #extra><van-checkbox :checked="paymentMethod === 0" /></template>
                     </van-cell>
                     <van-cell title="支付宝支付" @click="paymentMethod = 1">
-                        <template #icon
-                            ><cp-icon name="consult-alipay"
-                        /></template>
-                        <template #extra
-                            ><van-checkbox :checked="paymentMethod === 1"
-                        /></template>
+                        <template #icon><cp-icon name="consult-alipay" /></template>
+                        <template #extra><van-checkbox :checked="paymentMethod === 1" /></template>
                     </van-cell>
                 </van-cell-group>
                 <div class="btn">
-                    <van-button type="primary" round block @click="pay()"
-                        >立即支付</van-button
-                    >
+                    <van-button type="primary" round block @click="pay()">立即支付</van-button>
                 </div>
             </div>
         </van-action-sheet>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.pay-type {
+    .amount {
+        padding: 20px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .btn {
+        padding: 15px;
+    }
+    .van-cell {
+        align-items: center;
+        .cp-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .van-checkbox :deep(.van-checkbox__icon) {
+            font-size: 16px;
+        }
+    }
+}
+</style>
