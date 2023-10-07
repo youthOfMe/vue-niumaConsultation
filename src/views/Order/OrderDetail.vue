@@ -2,6 +2,7 @@
 import { useOrderDetail } from '@/composables'
 import { useRoute } from 'vue-router'
 import OrderMedical from './Components/OrderMedical.vue'
+import { OrderType } from '@/enums'
 
 const route = useRoute()
 const { order } = useOrderDetail(route.params.id as string)
@@ -9,16 +10,23 @@ const { order } = useOrderDetail(route.params.id as string)
 
 <template>
     <div class="order-detail-page">
-        <cp-native-bar :title="$route.meta.title" />
+        <cp-native-bar :title="`${$route.meta.title}-${order?.statusValue}`" />
         <div class="order-head">
-            <!-- <div class="address">
-        <p class="area">
-          <van-icon name="location" />
-          <span>北京市昌平区</span>
-        </p>
-        <p class="detail">建材城西路金燕龙办公楼999号</p>
-        <p>李富贵 13211112222</p>
-      </div> -->
+            <div
+                class="address"
+                v-if="
+                    order?.status === OrderType.MedicineComplete ||
+                    order?.status === OrderType.MedicineTake ||
+                    order?.status === OrderType.MedicineSend
+                "
+            >
+                <p class="area">
+                    <van-icon name="location" />
+                    <span>{{}}</span>
+                </p>
+                <p class="detail">建材城西路金燕龙办公楼999号</p>
+                <p>李富贵 13211112222</p>
+            </div>
             <div class="card" @click="$router.push(`/order/logistics/${order?.id}`)">
                 <div class="logistics">
                     <p>【东莞市】您的包裹已由物流公司揽收</p>
