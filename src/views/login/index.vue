@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { mobileRules, passwordRules, codeRules } from '@/utils/rules'
-import { formProps, showSuccessToast, showToast, type FormInstance } from 'vant'
-import { loginByMobile, loginByPassword, sendMobileCode } from '@/service/user'
+import { showSuccessToast, showToast } from 'vant'
+import { loginByMobile, loginByPassword } from '@/service/user'
 import { useUserStore } from '@/stores/index'
-import { onMounted } from 'vue'
-import { queuePostFlushCb } from 'vue'
+import { useMobileCode } from '@/composables/index'
 
 const mobile = ref('')
 const password = ref('')
@@ -36,24 +35,7 @@ const isPass = ref(true)
 const code = ref('')
 
 // 配置发送验证码请求
-const time = ref(0)
-const form = ref<FormInstance>()
-let timer: number
-const onSend = async () => {
-    // 验证 : 手机号 倒计时
-    if (time.value > 0) return
-    await form.value?.validate('mobile')
-    await sendMobileCode(mobile.value, 'login')
-    showToast('发送成功')
-    // 开启倒计时
-    time.value = 60
-    if (timer) clearInterval(timer) // 保险
-    timer = setInterval(() => {
-        time.value--
-        if (time.value <= 0) clearInterval(timer)
-    }, 1000)
-}
-onUnmounted(() => clearInterval(timer))
+const { onSend, time, form } = useMobileCode(mobile, 'login')
 
 // 进行配置密码的可见与不可见
 const isShow = ref<boolean>(false)

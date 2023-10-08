@@ -2,6 +2,7 @@
 /* global QC */
 import { loginByQQ } from '@/service/user'
 import { onMounted, ref } from 'vue'
+import { useMobileCode } from '@/composables/index'
 
 const openId = ref('')
 const isNeedBind = ref(false)
@@ -19,6 +20,11 @@ onMounted(() => {
         })
     }
 })
+
+// 配置发送验证码的功能
+const mobile = ref('')
+const code = ref()
+const { form, time, onSend } = useMobileCode(mobile, 'bindMobile')
 </script>
 
 <template>
@@ -28,10 +34,12 @@ onMounted(() => {
             <h3>手机绑定</h3>
         </div>
         <van-form autocomplete="off" ref="form">
-            <van-field name="mobile" placeholder="请输入手机号"></van-field>
-            <van-field name="code" placeholder="请输入验证码">
+            <van-field name="mobile" placeholder="请输入手机号" v-model="mobile"></van-field>
+            <van-field name="code" placeholder="请输入验证码" v-model="code">
                 <template #button>
-                    <span class="btn-send">发送验证码</span>
+                    <span class="btn-send" @click="onSend()">
+                        {{ time > 0 ? `${time}s后再次发送` : '发送验证码' }}
+                    </span>
                 </template>
             </van-field>
             <div class="cp-cell">

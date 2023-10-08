@@ -1,10 +1,18 @@
 import { OrderType } from '@/enums'
 import { cancelOrder, deleteOrder, followOrUnfollow, getPrescriptionPic } from '@/service/consult'
 import { getMedicalOrderDetail } from '@/service/order'
+import { sendMobileCode } from '@/service/user'
 import type { ConsultOrderItem, FollowType } from '@/types/consult'
 import type { OrderDetail } from '@/types/order'
-import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
-import { onMounted, ref } from 'vue'
+import type { CodeType } from '@/types/user'
+import {
+    showFailToast,
+    showImagePreview,
+    showSuccessToast,
+    type FormInstance,
+    showToast
+} from 'vant'
+import { onMounted, onUnmounted, ref, type Ref } from 'vue'
 // Vue3概念: 通过组合式API封装 数据逻辑 在一起的函数叫做组合式API 书写规范都是usexxxxx
 // 在Composables文件中进行编写
 export const useFollow = (type: FollowType = 'doc') => {
@@ -79,4 +87,27 @@ export const useOrderDetail = (id: string) => {
         order.value = res.data
     })
     return { order }
+}
+
+// 封装发送短信验证码
+export const useMobileCode = (mobile: Ref<string>, type?: CodeType) => {
+    const time = ref(0)
+    const form = ref<FormInstance>()
+    let timer: number
+    const onSend = async () => {
+        // 验证 : 手机号 倒计时
+        if (time.value > 0) return
+        await form.value?.validate('mobile')
+        await sendMobileCode(mobile.value, type!)
+        showToast('发送成功')
+        // 开启倒计时
+        time.value = 60
+        if (timer) clearInterval(timer) // 保险
+        timer = setInterval(() => {
+            time.value--
+            if (time.value <= 0) clearInterval(timer)
+        }, 1000)
+        onUnmounted(() => clearInterval(timer))
+    }
+    return { onSend, time, form }
 }
