@@ -95,7 +95,7 @@ const router = createRouter({
             meta: { title: '药品订单' }
         },
         {
-            path: '/login/back',
+            path: '/login/callback',
             component: () => import('@/views/login/LoginBack.vue'),
             meta: { title: '第三方登录' }
         },

@@ -1,10 +1,4 @@
-import type {
-    User,
-    CodeType,
-    UserInfo,
-    PatientList,
-    Patient
-} from '@/types/user'
+import type { User, CodeType, UserInfo, PatientList, Patient } from '@/types/user'
 import { request } from '@/utils/request'
 
 // 密码登录
@@ -26,16 +20,20 @@ export const getUserInfo = () => request<UserInfo>('patient/myUser')
 export const getPatientList = () => request<PatientList>('patient/mylist')
 
 // 添加患者
-export const addPatient = (patient: Patient) =>
-    request('patient/add', 'POST', patient)
+export const addPatient = (patient: Patient) => request('patient/add', 'POST', patient)
 
 // 编辑患者
-export const editPatient = (patient: Patient) =>
-    request('patient/update', 'PUT', patient)
+export const editPatient = (patient: Patient) => request('patient/update', 'PUT', patient)
 
 // 删除患者api
 export const delPatient = (id: string) => request(`patient/del/${id}`, 'DELETE')
 
 // 患者详情api
-export const getPatientDetail = (id: string) =>
-    request<Patient>(`patient/info/${id}`)
+export const getPatientDetail = (id: string) => request<Patient>(`patient/info/${id}`)
+
+// 定义第三方登录接口
+export const loginByQQ = (openId: string) =>
+    request<User>('login/thirdparty', 'POST', {
+        openId,
+        source: 'qq'
+    })
