@@ -90,6 +90,11 @@ const router = createRouter({
             meta: { title: '物流详情' }
         },
         {
+            path: '/order',
+            component: () => import('@/views/Order/OrderPage.vue'),
+            meta: { title: '药品订单' }
+        },
+        {
             path: '/',
             component: () => import('@/views/Layout/index.vue'),
             children: [
