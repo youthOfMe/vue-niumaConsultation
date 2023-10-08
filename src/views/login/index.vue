@@ -5,6 +5,8 @@ import { mobileRules, passwordRules, codeRules } from '@/utils/rules'
 import { formProps, showSuccessToast, showToast, type FormInstance } from 'vant'
 import { loginByMobile, loginByPassword, sendMobileCode } from '@/service/user'
 import { useUserStore } from '@/stores/index'
+import { onMounted } from 'vue'
+import { queuePostFlushCb } from 'vue'
 
 const mobile = ref('')
 const password = ref('')
@@ -55,14 +57,18 @@ onUnmounted(() => clearInterval(timer))
 
 // 进行配置密码的可见与不可见
 const isShow = ref<boolean>(false)
+
+// 实现QQ登录
+// onMounted(() => {
+//     QC.Login({
+//         btnId: 'qq'
+//     })
+// })
 </script>
 
 <template>
     <div class="login-page">
-        <cp-native-bar
-            right-text="注册"
-            @click-right="$router.push('/register')"
-        ></cp-native-bar>
+        <cp-native-bar right-text="注册" @click-right="$router.push('/register')"></cp-native-bar>
         <!-- 头部 -->
         <div class="login-head">
             <h3>{{ isPass ? '密码登录' : '短信验证码登录' }}</h3>
@@ -119,9 +125,7 @@ const isShow = ref<boolean>(false)
                 </van-checkbox>
             </div>
             <div class="cp-cell">
-                <van-button block round type="primary" native-type="submit"
-                    >登 录</van-button
-                >
+                <van-button block round type="primary" native-type="submit">登 录</van-button>
             </div>
             <div class="cp-cell">
                 <a href="javascript:;">忘记密码？</a>
@@ -130,9 +134,13 @@ const isShow = ref<boolean>(false)
         <!-- 底部 -->
         <div class="login-other">
             <van-divider>第三方登录</van-divider>
-            <div class="icon">
-                <img src="@/assets/qq.svg" alt="" />
-            </div>
+            <a
+                href="https://graph.qq.com/oauth2.0/authorize?client_id=102015968&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fconsult-patients.itheima.net%2Flogin%2Fcallback"
+            >
+                <div class="icon" id="qq">
+                    <img src="@/assets/qq.svg" alt="" />
+                </div>
+            </a>
         </div>
     </div>
 </template>

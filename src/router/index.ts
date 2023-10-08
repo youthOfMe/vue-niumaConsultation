@@ -95,6 +95,11 @@ const router = createRouter({
             meta: { title: '药品订单' }
         },
         {
+            path: '/login/back',
+            component: () => import('@/views/login/LoginBack.vue'),
+            meta: { title: '第三方登录' }
+        },
+        {
             path: '/',
             component: () => import('@/views/Layout/index.vue'),
             children: [
@@ -134,7 +139,7 @@ router.beforeEach((to) => {
     // 获取token的
     const userStore = useUserStore()
     // 准备白名单
-    const whiteList = ['/login']
+    const whiteList = ['/login', '/login/callback']
     // 如果你没有token并且不在白名单中，就重定向到登录
     if (!userStore.user?.token && !whiteList.includes(to.path)) return '/login'
 })
