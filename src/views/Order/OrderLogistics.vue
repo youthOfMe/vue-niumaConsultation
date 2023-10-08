@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import type { Logistics } from '@/types/order'
 import { getMedicalOrderLogistics } from '@/service/order'
 import AMaPLoader from '@amap/amap-jsapi-loader'
+import { showFailToast } from 'vant'
 
 const route = useRoute()
 const logistics = ref<Logistics>()
@@ -28,6 +29,21 @@ const initMap = () => {
         const map = new AMap.Map('map', {
             mapStyle: 'amap://styles/whitesmoke',
             zoom: 12
+        })
+        AMap.plugin('AMap.Driving', function () {
+            const driving = new AMap.Driving({
+                map, // 将路径进行
+                showTraffic: false, // 配置是否进行展示路径的道路情况
+                hideMarkers: true // 进行隐藏路径标志
+            })
+            if (!(logistics.value?.logisticsInfo && logistics.value?.logisticsInfo.length >= 2))
+                return showFailToast('数据加载错误')
+            const list = [...logistics.value.logisticsInfo]
+            const start = list.shift()
+            const end = list.pop()
+            driving.search([start?.longitude, start?.latitude], [end?.longitude, end?.latitude], {
+                waypoints: list.map((item) => [item.longitude, item.latitude])
+            })
         })
     })
 }
