@@ -26,7 +26,11 @@ import { ConsultType } from '@/enums'
         <div class="home-navs">
             <van-row>
                 <van-col span="8">
-                    <router-link to="/" class="nav">
+                    <router-link
+                        to="/consult/fast"
+                        class="nav"
+                        @click="consultStore.setType(ConsultType.Fast)"
+                    >
                         <cp-icon name="home-doctor"></cp-icon>
                         <p class="title">问医生</p>
                         <p class="desc">按科室查问医生</p>
@@ -44,7 +48,11 @@ import { ConsultType } from '@/enums'
                     </router-link>
                 </van-col>
                 <van-col span="8">
-                    <router-link to="/" class="nav">
+                    <router-link
+                        to="/consult/fast"
+                        class="nav"
+                        @click="consultStore.setType(ConsultType.Fast)"
+                    >
                         <cp-icon name="home-prescribe"></cp-icon>
                         <p class="title">开药门诊</p>
                         <p class="desc">线上买药更方便</p>
@@ -59,7 +67,7 @@ import { ConsultType } from '@/enums'
                     </router-link>
                 </van-col>
                 <van-col span="6">
-                    <router-link to="/" class="nav min">
+                    <router-link to="/user/patient" class="nav min">
                         <cp-icon name="home-docs"></cp-icon>
                         <p class="title">健康档案</p>
                     </router-link>

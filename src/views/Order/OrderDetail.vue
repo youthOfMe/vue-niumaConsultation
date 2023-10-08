@@ -15,8 +15,8 @@ const { order } = useOrderDetail(route.params.id as string)
             <div
                 class="address"
                 v-if="
-                    order?.status === OrderType.MedicineComplete ||
-                    order?.status === OrderType.MedicineTake ||
+                    order?.status === OrderType.MedicinePay ||
+                    order?.status === OrderType.MedicineCancel ||
                     order?.status === OrderType.MedicineSend
                 "
             >
@@ -34,7 +34,7 @@ const { order } = useOrderDetail(route.params.id as string)
                     {{ order?.addressInfo.mobile.replace(/^(\d{3})\d+(\d{4})$/, '$1****$2') }}
                 </p>
             </div>
-            <div class="card" @click="$router.push(`/order/logistics/${order?.id}`)">
+            <div class="card" @click="$router.push(`/order/logistics/${order?.id}`)" v-else>
                 <div class="logistics">
                     <p>{{ order?.expressInfo }}</p>
                     <p>{{ order?.expressFee }}</p>
@@ -79,7 +79,9 @@ const { order } = useOrderDetail(route.params.id as string)
         </van-action-bar>
         <!-- 待支付 -->
         <van-action-bar v-if="order?.status === OrderType.MedicinePay">
-            <p class="price">需要支付：<span>￥60</span></p>
+            <p class="price">
+                需要支付：<span>{{ order?.actualPayment }}</span>
+            </p>
             <van-action-bar-button color="#bbb" text="取消订单" />
             <van-action-bar-button type="primary" text="继续支付" />
         </van-action-bar>
