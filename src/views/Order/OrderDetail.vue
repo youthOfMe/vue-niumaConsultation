@@ -36,8 +36,8 @@ const { order } = useOrderDetail(route.params.id as string)
             </div>
             <div class="card" @click="$router.push(`/order/logistics/${order?.id}`)" v-else>
                 <div class="logistics">
-                    <p>{{ order?.expressInfo }}</p>
-                    <p>{{ order?.expressFee }}</p>
+                    <p>{{ order?.expressInfo.content }}</p>
+                    <p>{{ order?.expressInfo.time }}</p>
                 </div>
                 <van-icon name="arrow" />
             </div>

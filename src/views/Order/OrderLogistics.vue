@@ -3,12 +3,37 @@ import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import type { Logistics } from '@/types/order'
 import { getMedicalOrderLogistics } from '@/service/order'
+import AMaPLoader from '@amap/amap-jsapi-loader'
 
 const route = useRoute()
 const logistics = ref<Logistics>()
 onMounted(async () => {
     const res = await getMedicalOrderLogistics(route.params.id as string)
     logistics.value = res.data
+})
+
+// 进行配置高德地图 window全局对象  进行配置安全密钥
+window._AMapSecurityConfig = {
+    securityJsCode: 'e8b676df5e44b201a1bd73e31fbfa014'
+}
+
+// 进行初始化高德地图
+const initMap = () => {
+    AMaPLoader.load({
+        key: '78436d33fb21159617777d6c7fb00030',
+        version: '2.0'
+    }).then((AMap) => {
+        // 进行初始化地图
+        // new AMap.Map(挂载div的id)
+        const map = new AMap.Map('map', {
+            mapStyle: 'amap://styles/whitesmoke',
+            zoom: 12
+        })
+    })
+}
+
+onMounted(() => {
+    initMap()
 })
 </script>
 

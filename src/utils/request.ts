@@ -21,7 +21,7 @@ instance.interceptors.request.use(
         if (store.user?.token) {
             if (store.user?.token && config.headers) {
                 config.headers.Authorization = `Bearer ${store.user.token}`
-                console.log(config.headers.Authorization)
+                // console.log(config.headers.Authorization)
             }
         }
         return config

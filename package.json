@@ -19,6 +19,7 @@
     ]
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@vant/area-data": "^1.5.0",
     "@vueuse/core": "^10.4.1",
     "axios": "^1.5.0",
