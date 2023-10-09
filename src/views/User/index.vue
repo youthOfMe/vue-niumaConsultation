@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { getMediclOrderList } from '@/service/order'
 import { getUserInfo } from '@/service/user'
 import { useUserStore } from '@/stores'
 import type { UserInfo } from '@/types/user'
 import { showConfirmDialog } from 'vant'
 import { ref, onMounted } from 'vue'
+import { OrderType } from '@/enums'
 
 const user = ref<UserInfo>()
 
@@ -35,6 +37,27 @@ const onLogout = async () => {
     userStore.delUser()
     location.reload()
 }
+
+// 获取药品订单展示数量
+const current = ref<string>('1')
+const orderNumberList = ref<number[]>([])
+const orderTypeList = ref<OrderType[]>([
+    OrderType.MedicinePay,
+    OrderType.MedicineSend,
+    OrderType.MedicineTake,
+    OrderType.MedicineComplete,
+    OrderType.MedicineCancel
+])
+onMounted(async () => {
+    for (var i = 0; i < orderTypeList.value.length; i++) {
+        const res = await getMediclOrderList({
+            current: current.value,
+            pageSize: '100',
+            status: String(orderTypeList.value[i])
+        })
+        orderNumberList.value.push(res.data.rows.length)
+    }
+})
 </script>
 
 <template>
@@ -77,25 +100,25 @@ const onLogout = async () => {
             </div>
             <van-row>
                 <van-col span="6">
-                    <van-badge :content="user?.orderInfo.paidNumber || ''">
+                    <van-badge :content="orderNumberList[0]">
                         <cp-icon name="user-paid" />
                     </van-badge>
                     <p>待付款</p>
                 </van-col>
                 <van-col span="6">
-                    <van-badge :content="user?.orderInfo.shippedNumber || ''">
+                    <van-badge :content="orderNumberList[1]">
                         <cp-icon name="user-shipped" />
                     </van-badge>
                     <p>待发货</p>
                 </van-col>
                 <van-col span="6">
-                    <van-badge :content="user?.orderInfo.receiveNumber || ''">
+                    <van-badge :content="orderNumberList[2]">
                         <cp-icon name="user-received" />
                     </van-badge>
                     <p>待收货</p>
                 </van-col>
                 <van-col span="6">
-                    <van-badge :content="user?.orderInfo.finishedNumber || ''">
+                    <van-badge :content="orderNumberList[3]">
                         <cp-icon name="user-finished" />
                     </van-badge>
                     <p>已完成</p>
