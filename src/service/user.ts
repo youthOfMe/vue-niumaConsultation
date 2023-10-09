@@ -37,3 +37,7 @@ export const loginByQQ = (openId: string) =>
         openId,
         source: 'qq'
     })
+
+// 进行定义绑定手机的接口
+export const bindMobile = (data: { mobile: string; code: string; openId: string }) =>
+    request<User>('login/binding', 'POST', data)
