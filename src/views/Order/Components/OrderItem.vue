@@ -27,7 +27,7 @@ defineProps<{
                 <div class="body-label">地址</div>
                 <div class="body-value tip">{{ item.address || '无' }}</div>
             </div>
-            <div class="body-row">
+            <!-- <div class="body-row">
                 <div class="body-label">优惠券id</div>
                 <div class="body-value tip">{{ item.couponId || '无' }}</div>
             </div>
@@ -42,7 +42,7 @@ defineProps<{
             <div class="body-row">
                 <div class="body-label">药品金额</div>
                 <div class="body-value tip">￥{{ item.payment || '0' }}</div>
-            </div>
+            </div> -->
             <div class="body-row">
                 <div class="body-label">实际支付</div>
                 <div class="body-value tip">￥{{ item.actualPayment }}</div>
@@ -60,8 +60,12 @@ defineProps<{
                                 <img src="/src/assets/ad.png" alt="" class="fl" />
                                 <div class="info fr ml">
                                     <div class="name-quantity info-item">
-                                        <p class="fl">{{ med.name }}</p>
-                                        <p class="fr">x{{ med.quantity }}</p>
+                                        <div class="fl" style="width: 130px">
+                                            <p>{{ med.name }}</p>
+                                        </div>
+                                        <p class="fr quantity" style="width: 30px">
+                                            x{{ med.quantity }}
+                                        </p>
                                         <div class="clear"></div>
                                     </div>
                                     <div class="flag-specs info-item">
@@ -75,13 +79,18 @@ defineProps<{
                                 <div class="clear"></div>
                             </div>
                         </div>
+                        <p class="medical-use">
+                            {{ med.usageDosag }}
+                        </p>
                     </div>
                 </van-collapse-item>
             </van-collapse>
         </div>
         <div class="foot">
-            <van-button class="gray" plain size="small" round>查看详情</van-button>
-            <van-button type="primary" plain size="small" round>去支付</van-button>
+            <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
+                >查看详情</van-button
+            >
+            <van-button type="primary" plain size="small" round>去吹牛</van-button>
         </div>
     </div>
 </template>
@@ -167,8 +176,19 @@ defineProps<{
                             color: red;
                             font-size: 20px;
                         }
+                        .quantity {
+                            display: flex;
+                            flex-direction: row-reverse;
+                        }
                     }
                 }
+            }
+            .medical-use {
+                background-color: #eeeeee;
+                padding: 5px;
+                border-radius: 5%;
+                font-size: 14px;
+                color: #aaa;
             }
         }
     }

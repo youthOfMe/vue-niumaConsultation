@@ -17,7 +17,6 @@ onMounted(async () => {
         status: String(props.orderStatus)
     })
     medicalOrderList.value = res.data
-    console.log(res)
 })
 </script>
 
