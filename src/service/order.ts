@@ -1,4 +1,4 @@
-import type { AddressItem, OrderPre, OrderDetail, Logistics } from '@/types/order'
+import type { AddressItem, OrderPre, OrderDetail, Logistics, MedicalOrderList } from '@/types/order'
 import { request } from '@/utils/request'
 
 // 获取药品预支付信息
@@ -19,3 +19,7 @@ export const getMedicalOrderDetail = (id: string) =>
 // 获取物流详情
 export const getMedicalOrderLogistics = (id: string) =>
     request<Logistics>(`patient/order/${id}/logistics`)
+
+// 进行获取订单列表信息
+export const getMediclOrderList = (params: { current: string; pageSize: string; status: string }) =>
+    request<MedicalOrderList>('patient/medicine/order/mylist', 'GET', params)

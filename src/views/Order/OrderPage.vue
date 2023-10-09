@@ -8,7 +8,15 @@ import CpNativeBar from '@/components/CpNativeBar.vue'
     <div class="consult-page">
         <cp-native-bar :title="$route.meta.title"></cp-native-bar>
         <van-tabs sticky>
-            <van-tab title="取消问诊"><order-list :type="OrderType.ConsultCancel" /></van-tab>
+            <van-tab title="待支付"><order-list :order-status="OrderType.MedicinePay" /></van-tab>
+            <van-tab title="待发货"><order-list :order-status="OrderType.MedicineSend" /></van-tab>
+            <van-tab title="待收货"><order-list :order-status="OrderType.MedicineTake" /></van-tab>
+            <van-tab title="已完成"
+                ><order-list :order-status="OrderType.MedicineComplete"
+            /></van-tab>
+            <van-tab title="已取消"
+                ><order-list :order-status="OrderType.MedicineCancel"
+            /></van-tab>
         </van-tabs>
     </div>
 </template>

@@ -1,0 +1,15 @@
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.ml {
+    margin-left: 10px;
+}

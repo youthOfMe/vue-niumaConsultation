@@ -1,45 +1,55 @@
 // 全局css变量
 :root {
-    --cp-primary: #16C2A3;
-    --cp-plain: #EAF8F6;
-    --cp-orange: #FCA21C;
+    --cp-primary: #16c2a3;
+    --cp-plain: #eaf8f6;
+    --cp-orange: #fca21c;
     --cp-text1: #121826;
-    --cp-text2: #3C3E42;
-    --cp-text3: #6F6F6F;
+    --cp-text2: #3c3e42;
+    --cp-text3: #6f6f6f;
     --cp-tag: #848484;
     --cp-dark: #979797;
-    --cp-tip: #C3C3C5;
-    --cp-disable: #D9DBDE;
-    --cp-line: #EDEDED;
-    --cp-bg: #F6F7F9;
-    --cp-price: #EB5757;
+    --cp-tip: #c3c3c5;
+    --cp-disable: #d9dbde;
+    --cp-line: #ededed;
+    --cp-bg: #f6f7f9;
+    --cp-price: #eb5757;
     // 覆盖vant的变量
-    --van-primary-color :var(--cp-primary);
+    --van-primary-color: var(--cp-primary);
     // 单元格上下间距
     --van-cell-vertical-padding: 14px;
     // 复选框大小
     --van-checkbox-size: 14px;
     // 默认按钮文字大小
     --van-button-normal-font-size: 16px;
+    // 折叠面板
+    --van-padding-base: 0px;
 }
 // 局部css变量
 .footer {
-    --footer-color : green;
+    --footer-color: green;
 }
 
 // 全局样式
 body {
     font-size: 14px;
     color: var(--cp-text1);
-  }
-  a {
+}
+a {
     color: var(--cp-text2);
-  }
-  h1,h2,h3,h4,h5,h6,p,ul,ol {
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
     margin: 0;
     padding: 0;
-  }
-  
+}
+
 // 进度条样式
 #nprogress .bar {
     background-color: var(--cp-primary) !important;
@@ -48,14 +58,13 @@ body {
 // 全局覆盖van-tab样式
 .van-tabs {
     .van-tabs__nav {
-      padding: 0 0 15px 0;
+        padding: 0 0 15px 0;
     }
     .van-tabs__line {
-      width: 20px;
-      background-color: var(--cp-primary);
+        width: 20px;
+        background-color: var(--cp-primary);
     }
     .van-tab {
-      padding: 0 15px;
+        padding: 0 15px;
     }
-  }
-  
+}

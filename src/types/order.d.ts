@@ -1,4 +1,6 @@
 import type { Medical } from './room'
+import type { PageParams } from './consult'
+import type { NumberKeyboardProps } from 'vant'
 
 export type OrderPre = {
     /** 处方ID */
@@ -124,4 +126,47 @@ export type Logistics = {
     logisticsInfo: Location[]
     /** 当前运输位置 */
     currentLocationInfo: Location
+}
+
+export type MedicalOrderItem = {
+    // 订单id
+    id: string
+    // 订单编号
+    orderNo: string
+    // 优惠券抵扣
+    couponDeduction: number
+    // 优惠券id
+    couponId: string
+    // 运费
+    expressFee: number
+    // 药品金额
+    payment: number
+    // 实际支付金额
+    actualPayment: number
+    // paymentMethod 支付方式 1支付宝 2云闪付
+    paymentMethod: string
+    // medicines 药品信息
+    medicines: Medical[]
+    // address 订单地址信息
+    address: {
+        // 收获人
+        receiver: string
+        // 收货人手机号
+        receiverMobile: string
+        // 收货人省份+市
+        receiverAddress: string
+        // 收货人详细信息
+        receiverAddressDetail: string
+    }
+    status: string
+    statusValue: string
+}
+
+export type MedicalOrderList = {
+    // 总条数
+    total: number
+    // 总页数
+    pageTotal: number
+    // 返回响应的详细数据
+    rows: MedicalOrderItem[]
 }
