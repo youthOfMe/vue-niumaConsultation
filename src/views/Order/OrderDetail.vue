@@ -3,9 +3,15 @@ import { useOrderDetail } from '@/composables'
 import { useRoute } from 'vue-router'
 import OrderMedical from './Components/OrderMedical.vue'
 import { OrderType } from '@/enums'
+import { showFailToast } from 'vant'
+import { ref } from 'vue'
+import CpPaySheet from '@/components/CpPaySheet.vue'
 
 const route = useRoute()
 const { order } = useOrderDetail(route.params.id as string)
+
+// 配置继续支付功能
+const show = ref<boolean>(false)
 </script>
 
 <template>
@@ -66,30 +72,66 @@ const { order } = useOrderDetail(route.params.id as string)
         </div>
         <!-- 已取消 -->
         <van-action-bar v-if="order?.status === OrderType.MedicineCancel">
-            <van-action-bar-icon icon="delete-o" text="删除" />
-            <van-action-bar-button type="primary" text="沟通记录" />
+            <van-action-bar-icon
+                icon="delete-o"
+                text="删除"
+                @click="showFailToast('接口垃圾没办法')"
+            />
+            <van-action-bar-button
+                type="primary"
+                text="沟通记录"
+                @click="showFailToast('接口垃圾没办法')"
+            />
         </van-action-bar>
         <!-- 待收货 -->
         <van-action-bar v-if="order?.status === OrderType.MedicineTake">
-            <van-action-bar-button type="primary" text="确认收货" />
+            <van-action-bar-button
+                type="primary"
+                text="确认收货"
+                @click="showFailToast('接口垃圾没办法')"
+            />
         </van-action-bar>
         <!-- 待发货 -->
         <van-action-bar v-if="order?.status === OrderType.MedicineSend">
-            <van-action-bar-button type="primary" text="提醒发货" />
+            <van-action-bar-button
+                type="primary"
+                text="提醒发货"
+                @click="showFailToast('接口垃圾没办法')"
+            />
         </van-action-bar>
         <!-- 待支付 -->
         <van-action-bar v-if="order?.status === OrderType.MedicinePay">
             <p class="price">
                 需要支付：<span>{{ order?.actualPayment }}</span>
             </p>
-            <van-action-bar-button color="#bbb" text="取消订单" />
-            <van-action-bar-button type="primary" text="继续支付" />
+            <van-action-bar-button
+                color="#bbb"
+                text="取消订单"
+                @click="showFailToast('接口报废写这个的后端是垃圾')"
+            />
+            <van-action-bar-button type="primary" text="继续支付" @click="show = true" />
         </van-action-bar>
         <!-- 已完成 -->
         <van-action-bar v-if="order?.status === OrderType.MedicineComplete">
-            <van-action-bar-icon icon="delete-o" text="删除" />
-            <van-action-bar-button type="primary" text="再次购买" />
+            <van-action-bar-icon
+                icon="delete-o"
+                text="删除"
+                @click="showFailToast('接口垃圾没办法')"
+            />
+            <van-action-bar-button
+                type="primary"
+                text="再次购买"
+                @click="showFailToast('接口垃圾没办法')"
+            />
         </van-action-bar>
+        <cp-pay-sheet
+            v-if="order"
+            :show="show"
+            :order-id="order?.id"
+            :actual-payment="order?.actualPayment"
+            :pay-callback="`order/${order.id}`"
+        >
+        </cp-pay-sheet>
     </div>
 </template>
 

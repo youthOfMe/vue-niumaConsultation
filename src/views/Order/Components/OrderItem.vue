@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { MedicalOrderItem } from '@/types/order'
+import { OrderType } from '@/enums'
 const activeNames = ref<string[]>([])
 defineProps<{
     item: MedicalOrderItem
@@ -90,7 +91,35 @@ defineProps<{
             <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
                 >查看详情</van-button
             >
-            <van-button type="primary" plain size="small" round>去吹牛</van-button>
+            <div v-if="item.status === String(OrderType.MedicinePay)">
+                <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
+                    >查看详情</van-button
+                >
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    :to="`/order/${item?.id}`"
+                    v-if="item.status === String(OrderType.MedicinePay)"
+                    >去支付</van-button
+                >
+            </div>
+
+            <van-button
+                type="primary"
+                plain
+                size="small"
+                round
+                :to="`/consult/fast`"
+                v-else-if="
+                    item.status === String(OrderType.MedicineSend) || String(OrderType.MedicineTake)
+                "
+                >继续咨询</van-button
+            >
+            <van-button type="primary" plain size="small" round :to="`/home`" v-else
+                >咨询其它医生</van-button
+            >
         </div>
     </div>
 </template>

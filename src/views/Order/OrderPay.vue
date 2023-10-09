@@ -94,7 +94,7 @@ onMounted(() => {
             <van-checkbox v-model="agree">我已同意<a href="javascript:;">支付协议</a></van-checkbox>
         </div>
         <van-submit-bar
-            :price="50 * 100"
+            :price="orderPre.actualPayment * 100"
             button-text="立即支付"
             button-type="primary"
             text-align="left"
