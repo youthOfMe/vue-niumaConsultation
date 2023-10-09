@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { IllnessTime } from '@/enums'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { ConsultIllness } from '@/types/consult'
-import type {
-    UploaderAfterRead,
-    UploaderFileListItem
-} from 'vant/lib/uploader/types'
+import type { UploaderAfterRead, UploaderFileListItem } from 'vant/lib/uploader/types'
 import { uploadImage } from '@/service/consult'
 import { useConsultStore } from '@/stores'
 import { showConfirmDialog, showToast } from 'vant'
@@ -44,9 +40,7 @@ const onAfterRead: UploaderAfterRead = (item) => {
         })
 }
 const onDeleteImg = (item: UploaderFileListItem) => {
-    form.value.pictures = form.value.pictures?.filter(
-        (pic) => pic.url !== item.url
-    )
+    form.value.pictures = form.value.pictures?.filter((pic) => pic.url !== item.url)
     console.log(form.value.pictures)
 }
 
@@ -79,8 +73,7 @@ onMounted(() => {
             closeOnPopstate: false // 保证在页面回退时也能进行显示，因为这个组件在页面回退时自动关闭
         }).then(() => {
             // 回显数据
-            const { illnessDesc, illnessTime, consultFlag, pictures } =
-                consultStore.consult
+            const { illnessDesc, illnessTime, consultFlag, pictures } = consultStore.consult
             form.value = { illnessDesc, illnessTime, consultFlag, pictures }
             fileList.value = pictures || []
         })
@@ -96,12 +89,8 @@ onMounted(() => {
             <img class="img" src="@/assets/avatar-doctor.svg" />
             <div class="info">
                 <p class="tit">在线医生</p>
-                <p class="tip">
-                    请描述你的疾病或症状、是否用药、就诊经历，需要我听过什么样的帮助
-                </p>
-                <p class="safe">
-                    <cp-icon name="consult-safe" /><span>内容仅医生可见</span>
-                </p>
+                <p class="tip">请描述你的疾病或症状、是否用药、就诊经历，需要我听过什么样的帮助</p>
+                <p class="safe"><cp-icon name="consult-safe" /><span>内容仅医生可见</span></p>
             </div>
         </div>
         <!-- 收集信息 -->
@@ -114,17 +103,11 @@ onMounted(() => {
             ></van-field>
             <div class="item">
                 <p>本次患病多久了？</p>
-                <cp-radio-btn
-                    :options="timeOptions"
-                    v-model="form.illnessTime"
-                ></cp-radio-btn>
+                <cp-radio-btn :options="timeOptions" v-model="form.illnessTime"></cp-radio-btn>
             </div>
             <div class="item">
                 <p>此次病情是否去医院就诊过？</p>
-                <cp-radio-btn
-                    :options="flagOptions"
-                    v-model="form.consultFlag"
-                ></cp-radio-btn>
+                <cp-radio-btn :options="flagOptions" v-model="form.consultFlag"></cp-radio-btn>
             </div>
             <div class="illness-img">
                 <van-uploader
@@ -136,18 +119,10 @@ onMounted(() => {
                     :after-read="onAfterRead"
                     @delete="onDeleteImg"
                 ></van-uploader>
-                <p class="tip" v-if="!fileList.length">
-                    上传内容仅医生可见,最多9张图,最大5MB
-                </p>
+                <p class="tip" v-if="!fileList.length">上传内容仅医生可见,最多9张图,最大5MB</p>
             </div>
             <!-- 下一步 -->
-            <van-button
-                :class="{ disabled }"
-                type="primary"
-                round
-                block
-                @click="next"
-            >
+            <van-button :class="{ disabled }" type="primary" round block @click="next">
                 下一步
             </van-button>
         </div>

@@ -155,6 +155,12 @@ onMounted(() => {
         >
         </cp-pay-sheet>
     </div>
+    <div class="consult-pay-page" v-else>
+        <cp-native-bar title="支付" />
+        <van-skeleton title :row="4" style="margin-top: 46px"></van-skeleton>
+        <van-skeleton title :row="4" style="margin-top: 46px"></van-skeleton>
+        <van-skeleton title :row="4" style="margin-top: 46px"></van-skeleton>
+    </div>
 </template>
 
 <style lang="scss" scoped>

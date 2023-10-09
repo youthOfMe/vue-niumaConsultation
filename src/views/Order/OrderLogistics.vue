@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
-import type { Logistics } from '@/types/order'
+import type { Logistics, Location } from '@/types/order'
 import { getMedicalOrderLogistics } from '@/service/order'
 import AMaPLoader from '@amap/amap-jsapi-loader'
 import { showFailToast } from 'vant'
+import startImg from '@/assets/start.png'
+import endImg from '@/assets/end.png'
+import carImg from '@/assets/car.png'
 
 const route = useRoute()
 const logistics = ref<Logistics>()
 onMounted(async () => {
     const res = await getMedicalOrderLogistics(route.params.id as string)
     logistics.value = res.data
+    initMap()
 })
 
 // 进行配置高德地图 window全局对象  进行配置安全密钥
@@ -31,6 +35,23 @@ const initMap = () => {
             zoom: 12
         })
         AMap.plugin('AMap.Driving', function () {
+            // 进行创建可复用的标记函数
+            const getMarker = (point: Location, image: string, width = 25, height = 30) => {
+                const icon = new AMap.Icon({
+                    size: new AMap.Size(width, height),
+                    image,
+                    imageSize: new AMap.Size(width, height)
+                })
+                const marker = new AMap.Marker({
+                    // 默认图片的定位是使用左上角对准坐标的，需要进行调整
+                    position: [point?.longitude, point?.latitude],
+                    icon,
+                    // 左移12.5px 上移30px
+                    offset: new AMap.Pixel(-width / 2, -height / 2)
+                })
+                return marker
+            }
+            // 进行绘制路径和进行配置路径
             const driving = new AMap.Driving({
                 map, // 将路径进行
                 showTraffic: false, // 配置是否进行展示路径的道路情况
@@ -39,18 +60,37 @@ const initMap = () => {
             if (!(logistics.value?.logisticsInfo && logistics.value?.logisticsInfo.length >= 2))
                 return showFailToast('数据加载错误')
             const list = [...logistics.value.logisticsInfo]
+            // 进行绘制起点路径
             const start = list.shift()
+            const startMarker = getMarker(start!, startImg)
+            map.add(startMarker)
+            // 进行绘制重点路径
             const end = list.pop()
-            driving.search([start?.longitude, start?.latitude], [end?.longitude, end?.latitude], {
-                waypoints: list.map((item) => [item.longitude, item.latitude])
-            })
+            const endMarker = getMarker(end!, endImg)
+            map.add(endMarker)
+            // 进行最终配置地图
+            driving.search(
+                [start?.longitude, start?.latitude],
+                [end?.longitude, end?.latitude],
+                {
+                    waypoints: list.map((item) => [item.longitude, item.latitude])
+                },
+                () => {
+                    // 规划完毕的函数
+                    // 获取当前的运输位置
+                    const curr = logistics.value?.currentLocationInfo
+                    const currMarker = getMarker(curr!, carImg, 33, 20)
+                    map.add(currMarker)
+                    // 3s后进行定位到中间进行缩放
+                    setTimeout(() => {
+                        map.setFitView([currMarker])
+                        map.setZoom(10)
+                    }, 3000)
+                }
+            )
         })
     })
 }
-
-onMounted(() => {
-    initMap()
-})
 </script>
 
 <template>

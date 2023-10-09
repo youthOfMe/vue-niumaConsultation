@@ -6,6 +6,9 @@ import { showSuccessToast, showToast } from 'vant'
 import { loginByMobile, loginByPassword } from '@/service/user'
 import { useUserStore } from '@/stores/index'
 import { useMobileCode } from '@/composables/index'
+import startImg from '@/assets/start.png'
+import endImg from '@/assets/end.png'
+import carImg from '@/assets/car.png'
 
 const mobile = ref('')
 const password = ref('')
