@@ -12,18 +12,17 @@ const user = ref<UserInfo>()
 onMounted(async () => {
     const res = await getUserInfo()
     user.value = res.data
-    console.log(res.data)
 })
 
 // 初始化工具
 const tools = [
     { label: '我的问诊', path: '/user/consult' },
-    { label: '我的处方', path: '/' },
+    { label: '我的处方', path: '/order' },
     { label: '家庭档案', path: '/user/patient' },
     { label: '地址管理', path: '/address/manage' },
-    { label: '我的评价', path: '/' },
-    { label: '客服官方', path: '/' },
-    { label: '设置', path: '/' }
+    { label: '我的评价', path: '/order' },
+    { label: '客服官方', path: '/order' },
+    { label: '设置', path: '/order' }
 ]
 
 // 退出登录

@@ -61,7 +61,7 @@ import { ConsultType } from '@/enums'
             </van-row>
             <van-row>
                 <van-col span="6">
-                    <router-link to="/" class="nav min">
+                    <router-link to="/order" class="nav min">
                         <cp-icon name="home-order"></cp-icon>
                         <p class="title">药品订单</p>
                     </router-link>
@@ -73,13 +73,13 @@ import { ConsultType } from '@/enums'
                     </router-link>
                 </van-col>
                 <van-col span="6">
-                    <router-link to="/" class="nav min">
+                    <router-link to="/order" class="nav min">
                         <cp-icon name="home-rp"></cp-icon>
                         <p class="title">我的处方</p>
                     </router-link>
                 </van-col>
                 <van-col span="6">
-                    <router-link to="/" class="nav min">
+                    <router-link to="/order" class="nav min">
                         <cp-icon name="home-find"></cp-icon>
                         <p class="title">疾病查询</p>
                     </router-link>

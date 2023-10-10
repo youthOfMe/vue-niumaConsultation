@@ -20,6 +20,7 @@ instance.interceptors.request.use(
         const store = useUserStore()
         if (store.user?.token) {
             if (store.user?.token && config.headers) {
+                config.headers['Content-Type'] = 'application/json'
                 config.headers.Authorization = `Bearer ${store.user.token}`
                 // console.log(config.headers.Authorization)
             }

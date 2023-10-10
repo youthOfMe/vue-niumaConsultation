@@ -32,10 +32,11 @@ provide('showPay', showPay)
             /></van-tab>
         </van-tabs>
         <cp-pay-sheet
+            v-if="item"
             v-model:show="show"
-            :order-id="item?.id!"
-            :actual-payment="Number(item?.actualPayment)"
-            :pay-callback="`order/${item?.id}`"
+            :order-id="item.id"
+            :actual-payment="Number(item.actualPayment)"
+            :pay-callback="`order/${item.id}`"
         >
         </cp-pay-sheet>
     </div>
