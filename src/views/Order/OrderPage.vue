@@ -2,6 +2,19 @@
 import OrderList from './Components/OrderList.vue'
 import { OrderType } from '@/enums'
 import CpNativeBar from '@/components/CpNativeBar.vue'
+import type { MedicalOrderItem } from '@/types/order'
+import { ref } from 'vue'
+import { provide } from 'vue'
+import CpPaySheet from '@/components/CpPaySheet.vue'
+
+// 配置支付功能
+const item = ref<MedicalOrderItem>()
+const show = ref<boolean>(false)
+const showPay = (itema: MedicalOrderItem) => {
+    item.value = itema
+    show.value = true
+}
+provide('showPay', showPay)
 </script>
 
 <template>
@@ -18,6 +31,13 @@ import CpNativeBar from '@/components/CpNativeBar.vue'
                 ><order-list :order-status="OrderType.MedicineCancel"
             /></van-tab>
         </van-tabs>
+        <cp-pay-sheet
+            v-model:show="show"
+            :order-id="item?.id!"
+            :actual-payment="Number(item?.actualPayment)"
+            :pay-callback="`order/${item?.id}`"
+        >
+        </cp-pay-sheet>
     </div>
 </template>
 

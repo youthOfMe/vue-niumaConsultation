@@ -6,12 +6,17 @@ import { OrderType } from '@/enums'
 import { showFailToast } from 'vant'
 import { ref } from 'vue'
 import CpPaySheet from '@/components/CpPaySheet.vue'
+import { onMounted } from 'vue'
 
 const route = useRoute()
 const { order } = useOrderDetail(route.params.id as string)
+const niuma = () => {
+    show.value = true
+}
 
 // 配置继续支付功能
-const show = ref<boolean>(false)
+const show = ref(false)
+onMounted(() => {})
 </script>
 
 <template>
@@ -48,6 +53,7 @@ const show = ref<boolean>(false)
                 <van-icon name="arrow" />
             </div>
         </div>
+
         <!-- 药品清单列表 -->
         <order-medical :medicines="order?.medicines" v-if="order?.medicines"></order-medical>
         <div class="order-detail">
@@ -109,7 +115,7 @@ const show = ref<boolean>(false)
                 text="取消订单"
                 @click="showFailToast('接口报废写这个的后端是垃圾')"
             />
-            <van-action-bar-button type="primary" text="继续支付" @click="show = true" />
+            <van-action-bar-button type="primary" text="继续支付" @click="niuma()" />
         </van-action-bar>
         <!-- 已完成 -->
         <van-action-bar v-if="order?.status === OrderType.MedicineComplete">
@@ -124,14 +130,15 @@ const show = ref<boolean>(false)
                 @click="showFailToast('接口垃圾没办法')"
             />
         </van-action-bar>
-        <cp-pay-sheet
-            v-if="order"
-            :show="show"
-            :order-id="order?.id"
-            :actual-payment="order?.actualPayment"
-            :pay-callback="`order/${order.id}`"
-        >
-        </cp-pay-sheet>
+        <div v-if="order">
+            <cp-pay-sheet
+                v-model:show="show"
+                :order-id="order?.id"
+                :actual-payment="order?.actualPayment"
+                :pay-callback="`order/${order?.id}`"
+            >
+            </cp-pay-sheet>
+        </div>
     </div>
 </template>
 
@@ -201,22 +208,22 @@ const show = ref<boolean>(false)
         }
     }
 }
-:deep(.van-cell) {
-    .van-cell__title {
-        font-size: 14px;
-        flex: none;
-        width: 100px;
-    }
-    .van-cell__value {
-        font-size: 14px;
-    }
-    &.price {
-        .van-cell__value {
-            font-size: 18px;
-            color: var(--cp-price);
-        }
-    }
-}
+// :deep(.van-cell) {
+//     .van-cell__title {
+//         font-size: 14px;
+//         flex: none;
+//         width: 100px;
+//     }
+//     .van-cell__value {
+//         font-size: 14px;
+//     }
+//     &.price {
+//         .van-cell__value {
+//             font-size: 18px;
+//             color: var(--cp-price);
+//         }
+//     }
+// }
 .van-action-bar {
     padding: 0 10px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);

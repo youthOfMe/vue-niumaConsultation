@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getConsultOrderPayUrl } from '@/service/consult'
 import { showLoadingToast, showToast } from 'vant'
+import { onMounted } from 'vue'
 import { ref } from 'vue'
 
 const props = defineProps<{
@@ -8,7 +9,7 @@ const props = defineProps<{
     orderId: string
     actualPayment: number
     onClose?: () => void
-    payCallback: string
+    payCallback?: string
 }>()
 
 // 配置进行支付橱窗是否显示
@@ -28,6 +29,7 @@ const pay = async () => {
     })
     window.location.href = res.data.payUrl
 }
+onMounted(() => {})
 </script>
 
 <template>

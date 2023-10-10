@@ -2,10 +2,16 @@
 import { ref } from 'vue'
 import type { MedicalOrderItem } from '@/types/order'
 import { OrderType } from '@/enums'
+import { showFailToast } from 'vant'
+import CpPaySheet from '@/components/CpPaySheet.vue'
+import { inject } from 'vue'
 const activeNames = ref<string[]>([])
-defineProps<{
+const props = defineProps<{
     item: MedicalOrderItem
 }>()
+
+// 配置继续支付功能
+const showPay = inject<(itema: MedicalOrderItem) => void>('showPay')
 </script>
 
 <template>
@@ -91,22 +97,20 @@ defineProps<{
             <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
                 >查看详情</van-button
             >
-            <div v-if="item.status === String(OrderType.MedicinePay)">
-                <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
-                    >查看详情</van-button
-                >
-                <van-button
-                    type="primary"
-                    plain
-                    size="small"
-                    round
-                    :to="`/order/${item?.id}`"
-                    v-if="item.status === String(OrderType.MedicinePay)"
-                    >去支付</van-button
-                >
-            </div>
-
             <van-button
+                class="gray"
+                plain
+                size="small"
+                round
+                @click="showFailToast('垃圾接口强烈抵制')"
+                >取消订单</van-button
+            >
+            <van-button type="primary" plain size="small" round @click="showPay!(item)"
+                >去支付</van-button
+            >
+            <template v-if="item.status === String(OrderType.MedicineTake)"> </template>
+
+            <!-- <van-button
                 type="primary"
                 plain
                 size="small"
@@ -116,10 +120,10 @@ defineProps<{
                     item.status === String(OrderType.MedicineSend) || String(OrderType.MedicineTake)
                 "
                 >继续咨询</van-button
-            >
-            <van-button type="primary" plain size="small" round :to="`/home`" v-else
+            > -->
+            <!-- <van-button type="primary" plain size="small" round :to="`/home`" v-else
                 >咨询其它医生</van-button
-            >
+            > -->
         </div>
     </div>
 </template>
