@@ -2,9 +2,12 @@
 import { ref } from 'vue'
 import type { MedicalOrderItem } from '@/types/order'
 import { OrderType } from '@/enums'
-import { showFailToast } from 'vant'
-import CpPaySheet from '@/components/CpPaySheet.vue'
+import { showFailToast, showSuccessToast } from 'vant'
 import { inject } from 'vue'
+import { onMounted } from 'vue'
+import OrderMore from './OrderMore.vue'
+import { useRouter } from 'vue-router'
+
 const activeNames = ref<string[]>([])
 const props = defineProps<{
     item: MedicalOrderItem
@@ -12,6 +15,13 @@ const props = defineProps<{
 
 // 配置继续支付功能
 const showPay = inject<(itema: MedicalOrderItem) => void>('showPay')
+onMounted(() => {})
+
+// 配置更多中的查看详情功能
+const router = useRouter()
+const showDetail = () => {
+    router.push(`/order/${props.item.id}`)
+}
 </script>
 
 <template>
@@ -94,23 +104,108 @@ const showPay = inject<(itema: MedicalOrderItem) => void>('showPay')
             </van-collapse>
         </div>
         <div class="foot">
-            <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
+            <!-- <van-button class="gray" plain size="small" round :to="`/order/${item?.id}`"
                 >查看详情</van-button
-            >
-            <van-button
-                class="gray"
-                plain
-                size="small"
-                round
-                @click="showFailToast('垃圾接口强烈抵制')"
-                >取消订单</van-button
-            >
-            <van-button type="primary" plain size="small" round @click="showPay!(item)"
-                >去支付</van-button
-            >
-            <template v-if="item.status === String(OrderType.MedicineTake)"> </template>
+            > -->
 
-            <!-- <van-button
+            <template v-if="String(item.status) === String(OrderType.MedicinePay)">
+                <!-- 更多组件 -->
+                <order-more @on-detail="showDetail()"> </order-more>
+                <van-button
+                    class="gray"
+                    plain
+                    size="small"
+                    round
+                    @click="showFailToast('垃圾接口强烈抵制')"
+                    >取消订单</van-button
+                >
+                <van-button type="primary" plain size="small" round @click="showPay!(item)"
+                    >去支付</van-button
+                >
+            </template>
+            <template v-if="String(item.status) === String(OrderType.MedicineSend)">
+                <!-- 更多组件 -->
+                <order-more @on-detail="showDetail()"> </order-more>
+                <van-button
+                    class="gray"
+                    plain
+                    size="small"
+                    round
+                    @click="showFailToast('垃圾接口强烈抵制')"
+                    >取消订单</van-button
+                >
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    @click="showSuccessToast('已通知商家')"
+                    >提醒发货</van-button
+                >
+            </template>
+            <template v-if="String(item.status) === String(OrderType.MedicineTake)">
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    @click="$router.push(`/order/${item.id}`)"
+                    >查看详情</van-button
+                >
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    primary
+                    @click="showFailToast('后端正在拼命开发中')"
+                    >确认收货</van-button
+                >
+            </template>
+            <template v-if="String(item.status) === String(OrderType.MedicineComplete)">
+                <!-- 更多组件 -->
+                <order-more @on-detail="showDetail()"> </order-more>
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    @click="showFailToast('垃圾接口无法调用')"
+                    >删除订单</van-button
+                >
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    primary
+                    @click="showFailToast('后端正在拼命开发中')"
+                    >再次购买</van-button
+                >
+            </template>
+            <template v-if="String(item.status) === String(OrderType.MedicineCancel)">
+                <!-- 更多组件 -->
+                <order-more @on-detail="showDetail()"> </order-more>
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    @click="showFailToast('垃圾接口无法调用')"
+                    >删除订单</van-button
+                >
+                <van-button
+                    type="primary"
+                    plain
+                    size="small"
+                    round
+                    primary
+                    @click="showFailToast('后端正在拼命开发中')"
+                    >沟通记录</van-button
+                >
+            </template>
+
+            <!-- <van-buttono
                 type="primary"
                 plain
                 size="small"

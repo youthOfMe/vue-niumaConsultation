@@ -24,7 +24,7 @@ const { order } = useOrderDetail(route.query.orderId as string)
         </div>
         <div class="btn">
             <van-button type="primary" :to="`/order/${order?.id}`">查看订单</van-button>
-            <van-button :to="`/room?orderId=10000`">返回诊室</van-button>
+            <van-button :to="`/room?orderId=${order?.id}`">返回诊室</van-button>
         </div>
     </div>
 </template>
