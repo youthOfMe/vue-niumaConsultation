@@ -48,7 +48,6 @@ onMounted(() => {
             openId.value = id
             loginByQQ(id)
                 .then(() => {
-                    console.log(userStore.returnUrl, 555)
                     router.replace(userStore.returnUrl || '/user')
                     // 登录成功的逻辑
                 })
@@ -63,7 +62,7 @@ onMounted(() => {
 
 <template>
     <div class="login-page" v-if="isNeedBind">
-        <cp-nav-bar></cp-nav-bar>
+        <cp-native-bar :title="$route.meta.title"></cp-native-bar>
         <div class="login-head">
             <h3>手机绑定</h3>
         </div>

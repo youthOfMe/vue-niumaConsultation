@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { backTopProps } from 'vant'
 import { useRouter } from 'vue-router'
 
 let router = useRouter()
@@ -22,6 +21,7 @@ const props = defineProps<{
     title?: string
     rightTest?: string
     back?: () => void
+    clearAddressInfo?: () => void
 }>()
 const emit = defineEmits<{
     (e: 'click-right'): void
@@ -32,6 +32,7 @@ const onClickRight = function () {
 }
 // 3.回退
 const onClickLeft = () => {
+    if (props.clearAddressInfo) props.clearAddressInfo()
     if (props.back) return props.back()
     if (history.state?.back) {
         router.back()

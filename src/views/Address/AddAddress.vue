@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import CpNativeBar from '@/components/CpNativeBar.vue'
 import { areaList } from '@vant/area-data'
-import { showToast, type AddressEditInfo, type AddressEditSearchItem, showSuccessToast } from 'vant'
-import { ref, type Ref } from 'vue'
+import { type AddressEditInfo, type AddressEditSearchItem, showSuccessToast } from 'vant'
+import { onUnmounted, ref } from 'vue'
 import { addAddressItem } from '@/service/address'
 import { useRouter } from 'vue-router'
+import { useAddressStore } from '@/stores/modules/address'
 
 // 配置新增地址功能
 const router = useRouter()
@@ -36,15 +37,38 @@ const onSave = async (addressData: AddressEditInfo) => {
     showSuccessToast('添加地址成功!')
     router.replace('/address/manage')
 }
+
+// 进行获取数据
+const addressStore = useAddressStore()
+const name = addressStore.addressInfo?.receiver
+const tel = addressStore.addressInfo?.mobile
+addressDetail.value = addressStore.addressInfo?.addressDetail
+    ? addressStore.addressInfo?.addressDetail
+    : ''
+isDefault.value = addressStore.addressInfo?.isDefault ? addressStore.addressInfo.isDefault : 0
+const addressInfo = ref<Partial<AddressEditInfo> | undefined>({
+    name,
+    tel,
+    addressDetail: addressDetail.value,
+    isDefault: isDefault.value ? true : false
+})
+
+onUnmounted(() => {
+    addressInfo.value = undefined
+})
 </script>
 
 <template>
-    <cp-native-bar :title="$route.meta.title"></cp-native-bar>
+    <cp-native-bar
+        :title="$route.meta.title"
+        :clear-address-info="addressStore.clearAddressInfo"
+    ></cp-native-bar>
     <div class="add-address-page">
         <van-address-edit
             :area-list="areaList"
             show-postal
             show-delete
+            :address-info="addressInfo"
             show-set-default
             :show-search-result="true"
             :search-result="searchResult"

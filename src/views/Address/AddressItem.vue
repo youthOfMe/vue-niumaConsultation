@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import type { AddressItem } from '@/types/order.d.ts'
 import { deleteAddressItem } from '@/service/address'
-import { showConfirmDialog, showSuccessToast } from 'vant'
+import { showConfirmDialog, showFailToast, showSuccessToast } from 'vant'
+import { useAddressStore } from '@/stores/modules/address'
+import type { ChangeAddressInfo } from '@/types/address'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { onUnmounted } from 'vue'
 
-defineProps<{
+const props = defineProps<{
     item: AddressItem
 }>()
 
+// 配置删除地址功能
 const deleteAddress = (id: string) => {
     console.log(id)
     showConfirmDialog({
@@ -18,6 +24,20 @@ const deleteAddress = (id: string) => {
         showSuccessToast('删除地址成功')
         window.location.replace('/address/manage')
     })
+}
+
+// 配置编辑地址信息功能
+const changeAddressInfo = ref<ChangeAddressInfo>()
+const addressStore = useAddressStore()
+const router = useRouter()
+const changeAddress = (item: AddressItem) => {
+    if (!changeAddressInfo.value) return showFailToast('数据加载错误')
+    const { receiver, mobile, addressDetail } = props.item
+    changeAddressInfo.value = { receiver, mobile, addressDetail }
+    changeAddressInfo.value.isDefault = item.isDefault
+    addressStore.setAddressInfo(changeAddressInfo.value)
+    console.log()
+    router.push('/address/add')
 }
 </script>
 
@@ -69,7 +89,13 @@ const deleteAddress = (id: string) => {
             </div>
         </div>
         <template #right>
-            <van-button square type="primary" text="编辑" class="button" />
+            <van-button
+                square
+                type="primary"
+                text="编辑"
+                class="button"
+                @click="changeAddress(item)"
+            />
             <van-button
                 square
                 text="删除"
