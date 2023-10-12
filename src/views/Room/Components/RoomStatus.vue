@@ -17,16 +17,12 @@ console.log(props.status)
             <span>咨询中</span>
             <span
                 >剩余时间:
-                <van-count-down v-if="countdown" :time="countdown * 1000">
-                </van-count-down
+                <van-count-down v-if="countdown" :time="countdown * 1000"> </van-count-down
             ></span>
         </div>
         <div
             class="end"
-            v-if="
-                status === OrderType.ConsultCancel ||
-                status === OrderType.ConsultComplete
-            "
+            v-if="status === OrderType.ConsultCancel || status === OrderType.ConsultComplete"
         >
             <van-icon name="passed" /> 已结束
         </div>

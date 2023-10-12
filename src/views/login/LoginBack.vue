@@ -47,8 +47,9 @@ onMounted(() => {
         QC.Login.getMe((id: string) => {
             openId.value = id
             loginByQQ(id)
-                .then(() => {
-                    router.replace(userStore.returnUrl || '/user')
+                .then((res) => {
+                    // 进行登录成功后也会获取到接口返回的数据对象
+                    loginSuccess(res)
                     // 登录成功的逻辑
                 })
                 .catch(() => {
