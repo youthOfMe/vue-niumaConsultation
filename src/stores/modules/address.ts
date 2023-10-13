@@ -9,7 +9,6 @@ export const useAddressStore = defineStore(
         const addressInfo = ref<ChangeAddressInfo>()
         // 记录地址信息对象
         const setAddressInfo = (changeAddressInfo: ChangeAddressInfo) => {
-            console.log(changeAddressInfo)
             const { receiver, mobile, addressDetail } = changeAddressInfo
             addressInfo.value = {
                 receiver,
@@ -19,7 +18,6 @@ export const useAddressStore = defineStore(
                 // countyCode,
                 addressDetail
             }
-            console.log(addressInfo)
             addressInfo.value.isDefault = changeAddressInfo.isDefault ? 1 : 0
         }
         // 清空地址信息对象

@@ -1,7 +1,7 @@
 import { request } from '@/utils/request'
 import type { AddressItem } from '@/types/order'
 import type { AddressId } from '@/types/address'
-import type { AddAddressParams, DeleteAddressParams, ChangeAddressParams } from '@/types/address'
+import type { AddAddressParams, ChangeAddressParams, DeleteAddressParams } from '@/types/address'
 
 // 获取地址列表
 export const getAddressList = () => request<AddressItem[]>('patient/order/address', 'GET')
@@ -12,7 +12,7 @@ export const addAddressItem = (params: AddAddressParams) =>
 
 // 进行删除收获地址信息
 export const deleteAddressItem = (id: string) =>
-    request<AddressId>(`patient/order/address/${id}`, 'DELETE')
+    request<DeleteAddressParams>(`patient/order/address/${id}`, 'DELETE')
 
 // 进行修改收货地址信息
 export const changeAddressItem = (params: ChangeAddressParams, id: string) =>

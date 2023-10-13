@@ -160,7 +160,12 @@ const show = ref(false)
             <van-button type="primary" round :to="`/home`">咨询其他医生</van-button>
         </div>
         <!-- 支付抽屉 -->
-        <cp-pay-sheet v-model:show="show" :order-id="item.id" :actual-payment="item.actualPayment">
+        <cp-pay-sheet
+            v-model:show="show"
+            :order-id="item.id"
+            :actual-payment="item.actualPayment"
+            pay-callback="room"
+        >
         </cp-pay-sheet>
     </div>
     <div class="consult-detail-page" v-else>

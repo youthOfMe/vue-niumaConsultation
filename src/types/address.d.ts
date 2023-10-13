@@ -32,5 +32,5 @@ export type ChangeAddressInfo = Omit<
     ChangeAddressParams,
     'provinceCode' | 'cityCode' | 'countyCode'
 > & {
-    id: string
+    id?: string
 }
