@@ -1,40 +1,55 @@
 <script setup lang="ts">
 import CpNativeBar from '@/components/CpNativeBar.vue'
 import { areaList } from '@vant/area-data'
-import { type AddressEditInfo, type AddressEditSearchItem, showSuccessToast } from 'vant'
+import {
+    type AddressEditInfo,
+    type AddressEditSearchItem,
+    showSuccessToast,
+    showFailToast
+} from 'vant'
 import { onUnmounted, ref } from 'vue'
 import { addAddressItem } from '@/service/address'
 import { useRouter } from 'vue-router'
 import { useAddressStore } from '@/stores/modules/address'
+import { changeAddressItem } from '@/service/address'
 
 // 配置新增地址功能
 const router = useRouter()
-const receiver = ref<string>('')
-const mobile = ref<string>('')
-const provinceCode = ref<string>()
 const cityCode = ref<string>()
-const countyCode = ref<string>()
 const searchResult = ref<AddressEditSearchItem[]>([])
 const addressDetail = ref<string>()
 const isDefault = ref<number>()
 const onSave = async (addressData: AddressEditInfo) => {
-    receiver.value = addressData.name
-    mobile.value = addressData.tel
-    provinceCode.value = addressData.areaCode.replace(/^(\d{2})\d+$/, '$10000')
-    cityCode.value = addressData.areaCode.replace(/^(\d{4})\d+$/, `$100`)
-    countyCode.value = addressData.areaCode
-    addressDetail.value = addressData.addressDetail
-    isDefault.value = addressData.isDefault ? 1 : 0
-    await addAddressItem({
-        receiver: receiver.value,
-        mobile: mobile.value,
-        provinceCode: provinceCode.value,
-        cityCode: cityCode.value,
-        countyCode: countyCode.value,
-        addressDetail: addressDetail.value,
-        isDefault: isDefault.value
-    })
-    showSuccessToast('添加地址成功!')
+    ;(addressStore.addressInfo
+        ? changeAddressItem(
+              {
+                  receiver: addressData.name,
+                  mobile: addressData.tel,
+                  provinceCode: addressData.areaCode.replace(/^(\d{2})\d+$/, '$10000'),
+                  cityCode: addressData.areaCode.replace(/^(\d{4})\d+$/, `$100`),
+                  countyCode: addressData.areaCode,
+                  addressDetail: addressData.addressDetail,
+                  isDefault: (isDefault.value = addressData.isDefault ? 1 : 0)
+              },
+              addressStore.addressInfo.id
+          )
+        : addAddressItem({
+              receiver: addressData.name,
+              mobile: addressData.tel,
+              provinceCode: addressData.areaCode.replace(/^(\d{2})\d+$/, '$10000'),
+              cityCode: cityCode.value!,
+              countyCode: addressData.areaCode,
+              addressDetail: addressData.addressDetail,
+              isDefault: (isDefault.value = addressData.isDefault ? 1 : 0)
+          })
+    )
+        .then(() => {
+            showSuccessToast(addressStore.addressInfo ? '修改地址成功!' : '添加地址成功')
+        })
+        .catch(() => {
+            showFailToast('操作失败')
+        })
+
     router.replace('/address/manage')
 }
 
@@ -54,6 +69,7 @@ const addressInfo = ref<Partial<AddressEditInfo> | undefined>({
 })
 
 onUnmounted(() => {
+    addressStore.clearAddressInfo()
     addressInfo.value = undefined
 })
 </script>

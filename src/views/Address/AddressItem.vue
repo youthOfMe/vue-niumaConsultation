@@ -31,12 +31,16 @@ const changeAddressInfo = ref<ChangeAddressInfo>()
 const addressStore = useAddressStore()
 const router = useRouter()
 const changeAddress = (item: AddressItem) => {
-    if (!changeAddressInfo.value) return showFailToast('数据加载错误')
+    if (!props.item) return showFailToast('数据加载错误')
     const { receiver, mobile, addressDetail } = props.item
-    changeAddressInfo.value = { receiver, mobile, addressDetail }
-    changeAddressInfo.value.isDefault = item.isDefault
+    changeAddressInfo.value = {
+        receiver,
+        mobile,
+        addressDetail,
+        id: item.id,
+        isDefault: item.isDefault
+    }
     addressStore.setAddressInfo(changeAddressInfo.value)
-    console.log()
     router.push('/address/add')
 }
 </script>

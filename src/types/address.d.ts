@@ -25,10 +25,12 @@ export type AddAddressParams = {
 export type DeleteAddressParams = Pick<AddressId, 'id'>
 
 // 配置修改收货地址
-export type ChangeAddressParams = Pick<AddressId, 'id'> & AddAddressParams
+export type ChangeAddressParams = AddAddressParams
 
 // 配置建立收货地址暂存库类型
 export type ChangeAddressInfo = Omit<
     ChangeAddressParams,
-    'id' | 'provinceCode' | 'cityCode' | 'countyCode'
->
+    'provinceCode' | 'cityCode' | 'countyCode'
+> & {
+    id: string
+}

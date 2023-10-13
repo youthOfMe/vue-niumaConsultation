@@ -15,5 +15,5 @@ export const deleteAddressItem = (id: string) =>
     request<AddressId>(`patient/order/address/${id}`, 'DELETE')
 
 // 进行修改收货地址信息
-export const changeAddressItem = (params: ChangeAddressParams) =>
-    request<AddressId>(`patient/order/address/${params.id}`, 'PUT', params)
+export const changeAddressItem = (params: ChangeAddressParams, id: string) =>
+    request<AddressId>(`patient/order/address/${id}`, 'PUT', params)

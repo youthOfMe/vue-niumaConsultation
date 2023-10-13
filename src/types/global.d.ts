@@ -16,3 +16,9 @@ type QCType = {
 }
 
 declare const QC: QCType
+
+// 进行给import.meta.env进行添加类型
+interface ImportMetaEnv {
+    VITE_APP_CALLBACK: string
+    VITE_APP_TITLE: string
+}
